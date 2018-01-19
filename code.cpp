@@ -2,76 +2,88 @@
 using namespace std;
 #define ll long long
 #define db double
-ll a[100005],b[100005];
-ll i,j,k,x,y,n,m,t=1,tc;
-void calculation()
+#define mk make_pair
+#define pb push_back
+ll n,i,j,x,y,k,q,a[100005],ans[100005],cnt;
+vector< pair< ll, pair<ll,pair<ll,ll> > > >p;
+map<ll,ll>mp;
+void add(ll nm)
 {
+    mp[nm]++;
+    if(mp[nm]==1)
+    {
+        cnt++;
+    }
+}
+
+void sub(ll nm)
+{
+    mp[nm]--;
+    if(mp[nm]==0)
+    {
+        cnt--;
+    }
+}
+int main()
+{
+
+    cin>>n>>q;
+    for(i=1; i<=n; i++)
+    {
+        cin>>a[i];
+    }
     k=sqrt(n);
     if(k*k<n)
     {
         k++;
     }
-    if(n%k!=0)
+    for(i=0; i<q; i++)
     {
-        for(i=(n/k)*k+n%k; i<(n/k+1)*k; i++)
-        {
-            a[i]=123456789;
-        }
+        cin>>x>>y;
+        p.pb(mk((x-1)/k,mk(y,mk(x,i))));
     }
-    for(i=0; i<k; i++)
+    sort(p.begin(),p.end());
+    ll L,R,id;
+    ll lft=0,rgt=0;
+    for(i=0; i<q; i++)
     {
-        ll mnm=123456789;
-        for(j=k*i; j<k*(i+1); j++)
+        L=p[i].second.second.first;
+        R=p[i].second.first;
+        id=p[i].second.second.second;
+        while(lft<L)
         {
-            mnm=min(mnm,a[j]);
+            sub(a[lft]);
+            lft++;
         }
-        b[i]=mnm;
+        while(lft>L)
+        {
+            lft--;
+            add(a[lft]);
+        }
+        while(rgt<=R)
+        {
+            add(a[rgt]);
+            rgt++;
+        }
+        while(rgt-1>R)
+        {
+            rgt--;
+            sub(a[rgt]);
+        }
+        ans[id]=cnt;
     }
-}
-int main()
-{
-    cin>>tc;
-    while(tc--)
+    for(i=0;i<q;i++)
     {
-        cin>>n>>m;
-        for(i=0; i<n; i++)
-        {
-            cin>>a[i];
-        }
-        calculation();
-        cout<<"Case "<<t++<<":"<<endl;
-        ll mnm=123456789;
-        for(i=0; i<m; i++)
-        {
-            cin>>x>>y;
-            x--;
-            y--;
-            if(x/k==y/k)
-            {
-                mnm=123456789;
-                for(j=x; j<=y; j++)
-                {
-                    mnm=min(mnm,a[j]);
-                }
-            }
-            else
-            {
-                mnm=123456789;
-                for(j=x/k+1; j<y/k; j++)
-                {
-                    mnm=min(mnm,b[j]);
-                }
-                for(j=(x/k+1)*k+x%k; j<(x/k+2)*k; j++)
-                {
-                    mnm=min(mnm,a[j]);
-                }
-                for(j=(y/k)*k; j<=y; j++)
-                {
-                    mnm=min(mnm,a[j]);
-                }
-            }
-            cout<<mnm<<endl;
-        }
+        cout<<ans[i]<<endl;
     }
     return 0;
 }
+/*
+10 5
+1 2 5 1 9 4 2 1 5 9
+1 5
+2 4
+3 8
+1 10
+5 9
+*/
