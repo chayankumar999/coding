@@ -4,86 +4,119 @@ using namespace std;
 #define db double
 #define mk make_pair
 #define pb push_back
-ll n,i,j,x,y,k,q,a[100005],ans[100005],cnt;
-vector< pair< ll, pair<ll,pair<ll,ll> > > >p;
-map<ll,ll>mp;
-void add(ll nm)
+int n,i,j,k,q,a[100005],ans[200005],cnt,nm;
+int mp[1000005];
+struct st
 {
-    mp[nm]++;
-    if(mp[nm]==1)
-    {
-        cnt++;
-    }
-}
-
-void sub(ll nm)
+    int x,y,id,sz;
+}arr[200005];
+bool comp(st r, st s)
 {
-    mp[nm]--;
-    if(mp[nm]==0)
+    if(r.sz<s.sz)
     {
-        cnt--;
+        return true;
     }
+    else if(r.sz==s.sz)
+    {
+        return r.y<s.y;
+    }
+    return false;
 }
 int main()
 {
-
-    cin>>n>>q;
+    //////////////////////////////////////////////////////////
+    //ios_base::sync_with_stdio(0);
+    //cin.tie(0);
+    //cout.tie(0);
+    //////////////////////////////////////////////////////////
+    scanf("%d",&n);
+    //cin>>n;
     for(i=1; i<=n; i++)
     {
-        cin>>a[i];
+        scanf("%d",&a[i]);
+        //cin>>a[i];
     }
     k=sqrt(n);
-    if(k*k<n)
+    //cin>>q;
+    scanf("%d",&q);
+    for(i=1; i<=q; i++)
     {
-        k++;
+        scanf("%d%d",&arr[i].x,&arr[i].y);
+        //cin>>arr[i].x>>arr[i].y;
+        arr[i].sz=arr[i].x/k;
+        arr[i].id=i;
     }
-    for(i=0; i<q; i++)
+    sort(arr+1,arr+q+1,comp);
+    int L,R,id;
+    int lft=0,rgt=0;
+    for(i=1; i<=q; i++)
     {
-        cin>>x>>y;
-        p.pb(mk((x-1)/k,mk(y,mk(x,i))));
-    }
-    sort(p.begin(),p.end());
-    ll L,R,id;
-    ll lft=0,rgt=0;
-    for(i=0; i<q; i++)
-    {
-        L=p[i].second.second.first;
-        R=p[i].second.first;
-        id=p[i].second.second.second;
+        L=arr[i].x;
+        R=arr[i].y;
+        id=arr[i].id;
         while(lft<L)
         {
-            sub(a[lft]);
+            mp[a[lft]]--;
+            if(mp[a[lft]]==0)
+            {
+                cnt--;
+            }
             lft++;
         }
         while(lft>L)
         {
             lft--;
-            add(a[lft]);
+            mp[a[lft]]++;
+            if(mp[a[lft]]==1)
+            {
+                cnt++;
+            }
         }
         while(rgt<=R)
         {
-            add(a[rgt]);
+            mp[a[rgt]]++;
+            if(mp[a[rgt]]==1)
+            {
+                cnt++;
+            }
             rgt++;
         }
         while(rgt-1>R)
         {
             rgt--;
-            sub(a[rgt]);
+            mp[a[rgt]]--;
+            if(mp[a[rgt]]==0)
+            {
+                cnt--;
+            }
         }
         ans[id]=cnt;
     }
-    for(i=0;i<q;i++)
+    for(i=1; i<=q; i++)
     {
-        cout<<ans[i]<<endl;
+        printf("%d\n",ans[i]);
+        //cout<<ans[i]<<endl;
     }
     return 0;
 }
 /*
-10 5
-1 2 5 1 9 4 2 1 5 9
-1 5
-2 4
-3 8
-1 10
-5 9
-*/
+bool operator<(const st &z)const
+    {
+        if(sz<z.sz)
+        {
+            return true;
+        }
+        else if(sz==z.sz)
+        {
+            if(y<z.y)
+            {
+                return true;
+            }
+            else if(y==z.y)
+            {
+                return (x<z.x);
+            }
+        }
+        return false;
+    }
+    */
