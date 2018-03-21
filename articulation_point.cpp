@@ -11,37 +11,35 @@ using namespace std;
 #define mem(a) memset(a,0,sizeof (a))
 #define mems(a) memset(a,-1,sizeof(a))
 vector<ll>v[20005];
-ll a[10005];
-ll vis[10005];
-ll ans[10005];
-ll tim[10005][2],n,m,c;
-map<pair<ll,ll>,ll>mp;
-void dfs(ll x)
+ll ans[10005],vis;
+ll low[10005],dis[100005],n,m,c,p;
+void dfs(ll x,ll p)
 {
-    vis[x]=1;
     ll sz=v[x].size();
-    tim[x][0]=tim[x][1]=++c;
+    low[x]=dis[x]=++c;
     for(int i=0; i<sz; i++)
     {
         ll adx=v[x][i];
-        if(mp[{x,adx}]==0) //for visited edge
+        if(adx==p)
         {
-            mp[{x,adx}]++;
-            mp[{adx,x}]++;
-            if(adx==1)//for root check
+            continue;
+        }
+        if(adx==1)//for root check
+        {
+            vis++;
+        }
+        if(low[adx]==0)
+        {
+            dfs(adx,x);
+            if(dis[x]<=low[adx])
             {
-                vis[adx]++;
+                ans[x]=1;
             }
-            if(vis[adx]==0)
-            {
-                dfs(adx);
-                tim[x][1]=min(tim[x][1],tim[adx][1]);
-                if(tim[x][0]<=tim[adx][1]) ans[x]=1;
-            }
-            else
-            {
-                tim[x][1]=min(tim[x][1],tim[adx][0]);
-            }
+            low[x]=min(low[x],low[adx]);
+        }
+        else
+        {
+            low[x]=min(low[x],dis[adx]);
         }
     }
 }
@@ -61,26 +59,28 @@ int main()
             v[y].pb(x);
         }
         c=0;
-        dfs(1);
+        vis=1;
+        dfs(1,0);
         c=0;
-        if(vis[1]<v[1].size())//for root check
+        if(vis<v[1].size())//for root check
         {
             c++;
         }
         for(i=2; i<=n; i++)
         {
             if(ans[i]==1)
+            {
                 c++;
+            }
         }
         printf("Case %lld: %lld\n",t++,c);
-        mp.clear();
-        mem(vis);
-        mem(tim);
+        mem(low);
+        mem(dis);
+        mem(ans);
         for(i=1; i<=n; i++)
         {
             v[i].clear();
         }
-        mem(ans);
     }
     return 0;
 }
