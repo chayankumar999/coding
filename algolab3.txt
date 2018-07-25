@@ -1,0 +1,641 @@
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 01                //
+//                                                   //
+//              sorting vector array using           //
+//          insertion,selection && bubble sort       //
+//                                                   //
+///////////////////////////////////////////////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+
+//////////////////////////////////////////////////////
+
+vector<int> get_random(int sz)
+{
+    int x;
+    vector<int>v;
+    for(int i=0; i<sz; i++)
+    {
+        cin>>x;
+        v.pb(x);
+    }
+    return v;
+}
+
+//////////////////////////////////////////////////////
+
+vector<int> insert_sort(vector<int> v, int sz)
+{
+    vector<int>sorted;
+    int i,j;
+    sorted.pb(v[0]);
+    for(i=1; i<sz; i++)
+    {
+        sorted.pb(v[i]);
+        for(j=i; j>0; j--)
+        {
+            if(sorted[j]<sorted[j-1])
+            {
+                swap(sorted[j],sorted[j-1]);
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    return sorted;
+}
+
+//////////////////////////////////////////////////////
+
+vector<int> select_sort(vector<int>v, int sz)
+{
+    int i,j,x,id;
+    vector<int>sorted;
+    for(i=0; i<sz; i++)
+    {
+        x=v[i];
+        id=i;
+        for(j=i+1; j<sz; j++)
+        {
+            if(x>v[j])
+            {
+                x=v[j];
+                id=j;
+            }
+        }
+        if(id!=i)
+        {
+            swap(v[i],v[id]);
+        }
+        sorted.pb(x);
+    }
+    return sorted;
+}
+
+//////////////////////////////////////////////////////
+
+vector<int> bubble_sort(vector<int>v, int sz)
+{
+    int i,j;
+    for(i=0; i<sz; i++)
+    {
+        for(j=0; j<sz-i-1; j++)
+        {
+            if(v[j]>v[j+1])
+            {
+                swap(v[j],v[j+1]);
+            }
+        }
+    }
+    return v;
+}
+
+//////////////////////////////////////////////////////
+
+void print_vector(vector<int>v, int sz)
+{
+    for(int i=0;i<sz;i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+
+//////////////////////////////////////////////////////
+
+int main()
+{
+    ll sz,i,j,opr;
+    cout<<"get the size of random numbers: "<<endl;
+    cin>>sz;
+
+    cout<<"generate n random numbers"<<endl;
+    vector<int>v=get_random(sz);
+
+
+    vector<int>v1=insert_sort(v,sz);
+    cout<<"after insertion sort elements are"<<endl;
+    print_vector(v1,sz);
+
+
+    vector<int>v2=select_sort(v,sz);
+    cout<<"after selection sort elements are"<<endl;
+    print_vector(v2,sz);
+
+    vector<int>v3=bubble_sort(v,sz);
+    cout<<"after bubble sort elements are"<<endl;
+    print_vector(v2,sz);
+
+    //double ed=clock();
+    //cout<<st<<" "<<ed<<endl;
+
+    return 0;
+}
+
+
+
+
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 03                //
+//                                                   //
+//         complexity analysing of merge sort        //
+//                                                   //
+//                                                   //
+///////////////////////////////////////////////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+
+//////////////////////////////////////////////////////
+
+vector<int> get_random(int sz)
+{
+    int x;
+    vector<int>v;
+    for(int i=0; i<sz; i++)
+    {
+        v.pb(rand()%10000000);
+    }
+    return v;
+}
+
+//////////////////////////////////////////////////////
+
+vector<int>_merge(vector<int>A,vector<int>B)
+{
+    int i=0,j=0;
+    vector<int>C;
+    while(i<A.size()&&j<B.size())
+    {
+        if(A[i]<B[j])
+        {
+            C.pb(A[i]);
+            i++;
+        }
+        else
+        {
+            C.pb(B[j]);
+            j++;
+        }
+    }
+    while(i<A.size())
+    {
+        C.pb(A[i]);
+        i++;
+    }
+    while(j<B.size())
+    {
+        C.pb(B[j]);
+        j++;
+    }
+    return C;
+}
+//////////////////////////////////////////////////////////////
+
+vector<int>To_merge(vector<int>v)
+{
+    vector<int>v1,v2,v3;
+    int sz=v.size();
+    if(sz>1)
+    {
+        for(int i=0; i<sz/2; i++)
+        {
+            v1.pb(v[i]);
+        }
+        for(int i=sz/2; i<sz; i++)
+        {
+            v2.pb(v[i]);
+        }
+        v1=To_merge(v1);
+        v2=To_merge(v2);
+        return _merge(v1,v2);
+    }
+    return v;
+}
+
+
+//////////////////////////////////////////////////////////
+
+int a[8]= {10,50,100,1000,5000,10000,20000,500000};
+int main()
+{
+    int i;
+    for(i=0; i<8; i++)
+    {
+        vector<int>A=get_random(a[i]);
+
+        int y=clock();
+        A=To_merge(A);
+        int x=clock();
+
+        A=To_merge(A);
+
+        int p=clock();
+        reverse(A.begin(),A.end());
+        int q=clock();
+
+        A=To_merge(A);
+
+        int z=clock();
+        A.clear();
+        cout<<a[i]<<" "<<x-y<<" "<<p-x<<" "<<z-q<<endl;
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 04                //
+//                                                   //
+//                    Quick Sort                     //
+//                                                   //
+///////////////////////////////////////////////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+#define VI vector<int>
+//////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////
+
+VI get_random(int sz)
+{
+    int x;
+    VI v;
+    for(int i=0; i<sz; i++)
+    {
+        v.pb(rand());
+    }
+    return v;
+}
+
+//////////////////////////////////////////////////////
+
+int _partition(VI &v,int st, int ed)
+{
+    int i,j,p;
+    i=j=st;
+    p=st+rand()%(ed-st+1);//for random pivot value
+    swap(v[p],v[ed]);
+    p=v[ed];
+    for(; i<ed; i++)
+    {
+        if(v[i]<p)
+        {
+            swap(v[i],v[j]);
+            j++;
+        }
+    }
+    swap(v[j],v[ed]);
+    return j;
+}
+
+//////////////////////////////////////////////////////
+
+VI quick_sort(VI v, int st, int ed)
+{
+    if(st<ed)
+    {
+        int p=_partition(v,st,ed);
+        v=quick_sort(v,st,p-1);
+        v=quick_sort(v,p+1,ed);
+    }
+    return v;
+}
+//////////////////////////////////////////////////////
+
+void print_vector(VI v, int sz)
+{
+    for(int i=0; i<sz; i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+
+//////////////////////////////////////////////////////
+//ll a[8]={10,100,500,1000,2000,5000,10000,12000};
+ll a[8]= {10,100,500,1000,10000,20000,50000,100000};
+int main()
+{
+    ll sz,i,j,k,x,y,z,p,q;
+    VI v;
+    cout<<"generate some random numbers"<<endl<<endl;
+    cout<<"number of numbers <--> best case <--> avg case <--> worst case "<<endl;
+    for(i=0; i<8; i++)
+    {
+
+        v=get_random(a[i]);
+        x=clock();
+        v=quick_sort(v,0,a[i]-1);
+        y=clock();
+        v=quick_sort(v,0,a[i]-1);
+        z=clock();
+        reverse(v.begin(),v.end());
+        p=clock();
+        v=quick_sort(v,0,a[i]-1);
+        q=clock();
+        cout<<a[i]<<" "<<q-p<<" "<<z-y<<" "<<y-x<<endl;
+        v.clear();
+    }
+    return 0;
+}
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 05                //
+//                                                   //
+//                    Heap Sort                      //
+//                                                   //
+///////////////////////////////////////////////////////\
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+#define _pb pop_back
+#define VI vector<int>
+
+//////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////
+
+void print_vector(VI v)
+{
+    for(int i=0;i<v.size();i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+
+//////////////////////////////////////////////////////
+
+VI get_random(int sz)
+{
+    int x;
+    VI v;
+    for(int i=0; i<sz; i++)
+    {
+        v.pb(rand());
+    }
+    return v;
+}
+//////////////////////////////////////////////////////
+
+int left_child(int id)
+{
+    return 2*id+1;
+}
+
+//////////////////////////////////////////////////////
+
+int right_child(int id)
+{
+    return 2*id+2;
+}
+
+//////////////////////////////////////////////////////
+
+int parent(int id)
+{
+    return (id-1)/2;
+}
+
+//////////////////////////////////////////////////////
+
+void max_heapify(VI &tree, int id)
+{
+    int lft=left_child(id);
+    int rgt=right_child(id);
+    int lrgst=id;
+    if(lft<tree.size()&&tree[lft]>tree[lrgst])
+    {
+        lrgst=lft;
+    }
+    if(rgt<tree.size()&&tree[rgt]>tree[lrgst])
+    {
+        lrgst=rgt;
+    }
+    if(lrgst!=id)
+    {
+        swap(tree[lrgst],tree[id]);
+        max_heapify(tree,lrgst);
+    }
+}
+//////////////////////////////////////////////////////
+
+void build_maxheap(VI &tree)
+{
+    for(int i=(tree.size()-1)/2;i>=0;i--)
+    {
+        max_heapify(tree,i);
+    }
+}
+//////////////////////////////////////////////////
+
+VI Heap_sort(VI &tree)
+{
+    VI v1;
+    while(tree.size()>0)
+    {
+        v1.pb(tree[0]);
+        swap(tree[0],tree[tree.size()-1]);
+        tree._pb();
+        max_heapify(tree,0);
+    }
+    return v1;
+}
+
+//////////////////////////////////////////////////
+int main()
+{
+    ll i,j,k,sz;
+
+    cout<<"get the size of random numbers: "<<endl;
+    cin>>sz;
+
+    cout<<"generate "<<sz<<" random numbers"<<endl;
+    VI tree=get_random(sz);
+    build_maxheap(tree);
+    VI v1=Heap_sort(tree);
+    //reverse(v1.begin(),v1.end());
+    print_vector(v1);
+
+    return 0;
+}
+
+
+
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 05                //
+//                                                   //
+//                    Counting Sort                  //
+//                                                   //
+///////////////////////////////////////////////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+#define VI vector<int>
+#define mx 1000
+VI get_random(int n)
+{
+    VI v;
+    for(int i=0;i<n;i++)
+    {
+        v.pb(rand()%(mx+1));
+    }
+    return v;
+}
+VI counting_sort(VI v)
+{
+    int freq[mx+2]={0};
+    int sorted[v.size()+2];
+    VI v1;
+    for(int i=0;i<v.size();i++)
+    {
+        freq[v[i]]++;
+    }
+    for(int i=1;i<=mx;i++)
+    {
+        freq[i]+=freq[i-1];
+    }
+    for(int i=v.size()-1;i>=0;i--)
+    {
+        sorted[freq[v[i]]]=v[i];
+        freq[v[i]]--;
+    }
+    for(int i=1;i<=v.size();i++)
+    {
+        v1.pb(sorted[i]);
+    }
+    return v1;
+}
+void printvector(VI v)
+{
+    for(int i=0;i<v.size();i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+int main()
+{
+    int n;
+    cout<<"number of elements: "<<endl;
+    cin>>n;
+    VI v=get_random(n);
+    v=counting_sort(v);
+    printvector(v);
+    return 0;
+}
+
+
+
+
+///////////////////////////////////////////////////////
+//                                                   //
+//                 Algorithm Lab : 06                //
+//                                                   //
+//                    Radix Sort                     //
+//                                                   //
+///////////////////////////////////////////////////////
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define pb push_back
+#define add 1000000000
+#define VI vector<ll>
+#define mx 1000
+VI get_random(ll sz)
+{
+    VI v;
+    for(int i=0;i<sz;i++)
+    {
+        v.pb(rand()%(mx+1));
+    }
+    return v;
+}
+VI counting_sort(VI v, ll exp)
+{
+    ll freq[10]={0};
+    ll sorted[v.size()+2]={0};
+    VI v1;
+    for(int i=0;i<v.size();i++)
+    {
+        freq[(v[i]/exp)%10]++;
+    }
+    for(int i=1;i<10;i++)
+    {
+        freq[i]+=freq[i-1];
+    }
+    for(int i=v.size()-1;i>=0;i--)
+    {
+        sorted[freq[(v[i]/exp)%10]]=v[i];
+        freq[(v[i]/exp)%10]--;
+    }
+    for(int i=1;i<=v.size();i++)
+    {
+        v1.pb(sorted[i]);
+    }
+    return v1;
+}
+void print_vector(VI v)
+{
+    for(int i=0;i<v.size();i++)
+    {
+        cout<<v[i]<<" ";
+    }
+    cout<<endl;
+}
+VI radix_sort(VI v)
+{
+    for(int i=1;mx/i!=0;i*=10)
+    {
+        v=counting_sort(v,i);
+    }
+    return v;
+}
+int main()
+{
+    ll n;
+    cout<<"Number of elements: "<<endl;
+    cin>>n;
+    VI v=get_random(n);
+    print_vector(v);
+    v=radix_sort(v);
+    print_vector(v);
+    return 0;
+}
+
+
+
