@@ -1,8 +1,9 @@
+// Special pairs // hackerearth
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
 typedef double db;
-const int MX=5000005;
+const int MX=1500005;
 const ll mod=1e9;
 const ll inf=1e18;
 #define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
@@ -11,48 +12,48 @@ const ll inf=1e18;
 #define mk make_pair
 #define ff first
 #define ss second
-int d[MX],dp[MX],f[MX];
+int d[MX],dp[MX][22],f[MX];
 int main()
 {
 
     FasterIO;
     int i,j,k,n,m,x,y,tc;
-    cin>>n;
-    for(i=0; i<n; i++)
+    cin>>tc;
+    while(tc--)
     {
-        cin>>d[i];
-        f[d[i]]++;
-    }
-    for(int msk=0; msk<(1LL<<22); msk++)
-    {
-        dp[msk]=f[msk];
-    }
-    for(i=0;i<=22;i++)
-    {
-        for(int msk=0;msk<(1LL<<22);msk++)
+        cin>>n;
+        for(i=0;i<n;i++)
         {
-            if(msk&(1LL<<i))
-                dp[msk]+=dp[msk^(1LL<<i)];
+            cin>>d[i];
+            f[d[i]]++;
         }
-    }
-    for(i=0; i<n; i++)
-    {
-        x=((1LL<<22)-1)^d[i];
-        if(dp[x]==0)
+        for(int msk=0;msk<(1LL<<20);msk++) // dp calculation part
         {
-            cout<<"-1 ";
-            continue;
-        }
-        int msk=x;
-        for(j=22; j>=0; j--)
-        {
-            if((msk&(1<<j))&&dp[msk^(1LL<<j)])
+            dp[msk][0]=f[msk];
+            if(msk&1)dp[msk][0]+=f[msk^1];
+            for(i=1;i<=20;i++)
             {
-                msk=msk^(1LL<<j);
+                dp[msk][i]=dp[msk][i-1];
+                if(msk&(1LL<<i))
+                    dp[msk][i]+=dp[msk^(1LL<<i)][i-1];
             }
         }
-        cout<<msk<<" ";
+
+        /*
+         dp[mask][20] contains value of all subset (let call x be a subset of mask)
+         for which mask&x==x
+        */
+        int ans=0;
+        for(i=0;i<n;i++) // result calculation part
+        {
+            ans+=dp[(1LL<<20)-1-d[i]][20];
+            /*((1<<20)-1)-d[i] || ((1<<20)-1)^d[i] is given such a mask value
+            which contain a position 1 for which position d[i] contain 0*/
+            /*dp[(1LL<<20)-1-d[i]][20] contains value of all subset
+            (let call x be a subset of mask 1<<20-1) for which x&d[i]==0*/
+            f[d[i]]=0;
+        }
+        cout<<ans<<endl;
     }
-    cout<<endl;
     return 0;
 }
