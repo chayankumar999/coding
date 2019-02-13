@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define mem(a) memset(a,-1,sizeof(a))
+#define sc(a) scanf("%d",&a)
+#define sc2(a,b) scanf("%d%d",&a,&b)
+#define MX 100005
+int a[20][20];
+int dp[20][MX],n;
+int solve(int pos, int msk)
+{
+    if(pos==n)
+    {
+        return 0;
+    }
+    if(~dp[pos][msk])
+    {
+        return dp[pos][msk];
+    }
+    int mx=0;
+    for(int i=0;i<n;i++)
+    {
+        if(!(msk&(1<<i)))
+        {
+            mx=max(mx,a[pos][i]+solve(pos+1,msk|(1<<i)));
+        }
+    }
+    return dp[pos][msk]=mx;
+}
+int main()
+{
+    int tc,i,j,k,cs=1;
+    sc(tc);
+    while(tc--)
+    {
+        sc(n);
+        for(i=0;i<n;i++)
+        {
+            for(j=0;j<n;j++)
+            {
+                sc(a[i][j]);
+            }
+        }
+        mem(dp);
+        k=solve(0,0);
+        printf("Case %d: %d\n",cs++,k);
+    }
+    return 0;
+}
