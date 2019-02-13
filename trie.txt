@@ -1,0 +1,89 @@
+/*
+uva: 1401
+given a string st and a number m. next m line contains m distinct word at most 100 length.
+how many way the string st can be divided into some string that each string will be one of the given m string.
+*/
+#include<bits/stdc++.h>
+using namespace std;
+#define MX 400000
+#define mem(a,x) memset(a,x,sizeof(a))
+#define mod 20071027
+vector<int>v[MX];
+struct Trie
+{
+    int endd;
+    int in[27];
+    Trie()
+    {
+        endd=0;
+        mem(in,0);
+    }
+};
+Trie T[MX];
+int dp[MX];
+int sz;
+int av;
+void add(char s[])
+{
+    int cur=0;
+    for(int i=0; s[i]; i++)
+    {
+        int vl=s[i]-96;
+        if(!T[cur].in[vl]) T[cur].in[vl]=++av;
+        cur=T[cur].in[vl];
+    }
+    T[cur].endd++;
+}
+void Q(char s[], int id)
+{
+    int cur=0,p=id;
+    while(true)
+    {
+        int vl=s[p++]-96;
+        if(!T[cur].in[vl])break;
+        cur=T[cur].in[vl];
+        if(T[cur].endd)v[id].push_back(p);
+        if(p==sz)break;
+    }
+}
+void pre(char s[])
+{
+    for(int i=0;s[i];i++)
+    {
+        Q(s,i);
+    }
+}
+int solve(int p)
+{
+    if(p==sz)return 1;
+    if(v[p].size()==0)return 0;
+    if(~dp[p])return dp[p];
+    dp[p]=0;
+    for(auto x: v[p])
+    {
+        dp[p]=(dp[p]+solve(x))%mod;
+    }
+    return dp[p];
+}
+int main()
+{
+    char s[MX],st[MX];
+    int tc,cs=1,i,j,k,n,m;
+    while(scanf("%s",st)==1)
+    {
+        scanf("%d",&m);
+        sz=strlen(st);
+        for(int i=0;i<=26;T[0].in[i]=0,i++);
+        mem(dp,-1);
+        while(m--)
+        {
+            scanf("%s",s);
+            add(s);
+        }
+        pre(st);
+        int res=solve(0);
+        printf("Case %d: %d\n",cs++,res);
+        for(i=0;i<sz;i++)v[i].clear();
+    }
+    return 0;
+}
