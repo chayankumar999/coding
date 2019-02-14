@@ -1,0 +1,16 @@
+ll Bigmod(ll b, ll p)
+{
+    ll ans=1;
+    for(; p; p>>=1)
+    {
+        if(p&1) ans=(ans*b)%mod;
+        b=(b*b)%mod;
+    }
+    return ans;
+}
+l bigmod(int b, int p)
+{
+    if(!p)return 1;
+    if(p&1)return (b*bigmod(b,p-1))%mod;
+    else {ll r=bigmod(b,p/2);return (r*r)%mod;}
+}
