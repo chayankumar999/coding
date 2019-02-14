@@ -8,7 +8,7 @@ ll Bigmod(ll b, ll p)
     }
     return ans;
 }
-l bigmod(int b, int p)
+ll bigmod(int b, int p)
 {
     if(!p)return 1;
     if(p&1)return (b*bigmod(b,p-1))%mod;
