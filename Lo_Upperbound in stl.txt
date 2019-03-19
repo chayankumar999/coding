@@ -1,0 +1,9 @@
+/*
+
+     lower_bound in vector 
+
+*/
+
+int lo=lower_bound(v.begin(),v.end(),x)-v.begin();
+
+int lo=lower_bound(v.begin(),v.end(),make_pair(x,y))-v.begin();
