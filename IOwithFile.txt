@@ -1,0 +1,2 @@
+//    freopen("C:\\Users\\chayan kumar roy\\Desktop\\in.txt","r",stdin);
+//    freopen("C:\\Users\\chayan kumar roy\\Desktop\\out.txt","w",stdout);
