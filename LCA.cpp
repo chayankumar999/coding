@@ -26,11 +26,11 @@ void dfs(int x, int p)
         dfs(u,x);
     }
 }
-void SPTBL(int n)
+void SPTBL()
 {
-    for(int i=1; i<=n; i++)
+    for(int j=1; (1<<j)<=n; j++)
     {
-        for(int j=1; (1<<j)<=n; j++)
+        for(int i=1; i<=n; i++)
         {
             if(sp[i][j-1]==-1) continue;
             sp[i][j]=sp[sp[i][j-1]][j-1];
