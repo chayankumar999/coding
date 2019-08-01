@@ -9,7 +9,6 @@
 */
 
 //min query increasing slope
-//or max query decreasing slope
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -74,7 +73,7 @@ int main()
 
 
 ///Online update and online query
-///everything is fine as long as you want the minimum/maximum
+///everything is fine as long as you want the maximum
 
 ///https://codeforces.com/problemset/problem/1083/E
 
