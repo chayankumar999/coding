@@ -73,7 +73,7 @@ int main()
 
 
 ///Online update and online query
-///everything is fine as long as you want the maximum
+///everything is fine as long as you want the minimum/maximum
 
 ///https://codeforces.com/problemset/problem/1083/E
 
