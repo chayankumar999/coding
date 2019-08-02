@@ -178,12 +178,16 @@ int main()
 ///Online update and online query
 ///everything is fine as long as you want the minimum/maximum
 
-///https://codeforces.com/problemset/problem/1083/E
+///https://www.codechef.com/problems/JUMP
 
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 #define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 typedef long long ll;
+typedef pair<ll,ll> pL;
+typedef long double float128;
+const ll is_query = -(1LL<<62), inf = 1e18;
+const int MX=300010;
 struct line
 {
     long long a, b;
@@ -265,8 +269,8 @@ struct cht
     }
     void add_line(long long a, long long b)
     {
-        line temp = line(-a, -b); // for maximum
-        //line temp = line(a, b); // for minimum
+        //line temp = line(-a, -b); // for maximum
+        line temp = line(a, b); // for minimum
         auto it = hull.lower_bound(temp);
         if(it != hull.end() && it -> a == a)
         {
@@ -307,45 +311,41 @@ struct cht
         query.type = 1;
         auto it = hull.lower_bound(query);
         it = prev(it);
-        return -(it -> a * x + it -> b); // for maximum
-        //return (it -> a * x + it -> b); // for minimum
+        //return -(it -> a * x + it -> b); // for maximum
+        return (it -> a * x + it -> b); // for minimum
     }
-}st;
-const int MX=2000000;
-ll x[MX],y[MX],a[MX],dp[MX];
-vector<pair<pair<ll,ll>, ll> >v;
+}T[4*MX];
+void up(int p, int l, int h, int id, pL pr)
+{
+    T[p].add_line(pr.first,pr.second);
+    if(l==h) return;
+    int m=(l+h)/2;
+    if(id<=m) up(2*p,l,m,id,pr);
+    else      up(2*p+1,m+1,h,id,pr);
+}
+ll Q(int p, int l, int h, int x, int y, ll vl)
+{
+    if(l>y||h<x) return inf;
+    if(l>=x && h<=y) return T[p].getbest(vl);
+    int m=(l+h)/2;
+    return min(Q(2*p,l,m,x,y,vl),Q(2*p+1,m+1,h,x,y,vl));
+}
+ll p[MX],a[MX],h[MX],dp[MX];
 int main()
 {
     FasterIO;
     int n;
     cin>>n;
-    for(int i=1; i<=n; i++)
+    for(int i=1; i<=n; i++) cin>>p[i];
+    for(int i=1; i<=n; i++) cin>>a[i];
+    for(int i=1; i<=n; i++) cin>>h[i];
+    dp[1]=a[1];
+    up(1,1,n,p[1],{-2*h[1],dp[1]+h[1]*h[1]});
+    for(int i=2; i<=n; i++)
     {
-        ll x,y,a;
-        cin>>x>>y>>a;
-        v.push_back({{x,y},a});
+        dp[i]=a[i]+Q(1,1,n,1,p[i]-1,h[i])+(h[i]*h[i]);
+        up(1,1,n,p[i],{-2*h[i],dp[i]+h[i]*h[i]});
     }
-    sort(v.begin(),v.end());
-    for(int i=0; i<n; i++)
-    {
-        x[i]=v[i].first.first;
-        y[i]=v[i].first.second;
-        a[i]=v[i].second;
-        a[i]=x[i]*y[i]-a[i];
-    }
-    st.add_line(0,0);
-    for(int i=0; i<n; i++)
-    {
-        dp[i]=st.getbest(y[i])+a[i];
-        st.add_line(-x[i],dp[i]); // for maximum
-       //st.add_line(x[i],dp[i]); // for minimum
-    }
-    ll ans=0;
-    for(int i=0; i<n; i++)
-    {
-        ans=max(ans,dp[i]);
-    }
-    cout<<ans<<endl;
+    cout<<dp[n]<<endl;
     return 0;
 }
-
