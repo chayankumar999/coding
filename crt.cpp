@@ -107,11 +107,10 @@ ll NCR(ll n, ll r, ll p)
 
 int main()
 {
-    ll tc,n,m,r,cs=0;
+    ll tc,n,m,r;
     cin>>tc;
     while(tc--)
     {
-        cs++;
         mp.clear();
         cin>>n>>r>>m; // m is squrefree
         if(m==1)
