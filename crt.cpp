@@ -1,4 +1,5 @@
 //LOJ 1319 – Monkey Tradition
+//HR – Cheese and Random Toppings
 //Complexity: O(n×log(L))
 
 #include<bits/stdc++.h>
@@ -7,7 +8,7 @@ typedef long long    ll;
 typedef __int128     ull;
 typedef pair<ll,ll>  pL;
 
-ull ext_gcd(ll A, ull B, ull *X, ull *Y)
+ull ext_gcd(ull A, ull B, ull *X, ull *Y)
 {
     ull x,x1,x2,y,y1,y2,r,r1,r2,q;
     x1=0; y1=1;     //Xi-1 and Yi-1
@@ -56,20 +57,46 @@ pL CRT( vector<ll> A, vector<ll> M ) {
     return {a1, m1};
 }
 
+//Lucas Theorem
+// can find NCR(n,r,p) where 1<=R<=N<=1e9 and p is a small prime number
+map<pair< pair<ll,ll>, ll>, ll>mp; // for memorization
+ll NCR(ll n, ll r, ll p)
+{
+    if(r<0 || r>n)      return 0;
+    if(!r || r==n)      return 1;
+    if(n>=p)            return (NCR(n/p,r/p,p)*NCR(n%p,r%p,p))%p;
+    if(!mp[{{n,r},p}])  mp[{{n,r},p}]=(NCR(n-1,r-1,p)+NCR(n-1,r,p))%p;
+    return mp[{{n,r},p}];
+}
 int main()
 {
-    int tc,n,cs=1;
+    ll tc,n,m,r,cs=0;
     cin>>tc;
     while(tc--)
     {
-        cin>>n;
-        vector<ll>p(n),r(n);
-        for(int i=0;i<n;i++)
+        cs++;
+        mp.clear();
+        cin>>n>>r>>m; // m is squrefree
+        if(m==1)
         {
-            cin>>p[i]>>r[i];
+            cout<<0<<endl; continue;
         }
-        pL xx=CRT(r,p);
-        cout<<"Case "<<cs++<<": "<<xx.first<<endl;
+        vector<ll>A,M;
+        for(int p=2; p*p<=m;p++)
+        {
+            while(m%p==0)
+            {
+                M.push_back(p); m/=p;
+            }
+        }
+        if(m>=2) M.push_back(m);
+
+        for(auto p:M)
+        {
+            A.push_back(NCR(n,r,p));
+        }
+        ll ncr=CRT(A,M).first;
+        cout<<ncr<<endl;
     }
     return 0;
 }
