@@ -60,6 +60,39 @@ pL CRT( vector<ll> A, vector<ll> M )
     return {a1, m1};
 }
 
+
+/** Works for non-coprime moduli.
+for better understanding code see the comments of previous code */
+pL chinese_remainder_theorem( vector<int> A, vector<int> M ) {
+    if(A.size() != M.size()) return {-1,-1}; /** Invalid input*/
+ 
+    int n = A.size();
+ 
+    ll a1 = A[0];
+    ll m1 = M[0];
+    for ( int i = 1; i < n; i++ ) {
+        ll a2 = A[i];
+        ll m2 = M[i];
+ 
+        ll g = __gcd(m1, m2);
+        if ( a1 % g != a2 % g ) return {-1,-1}; /** No solution exists*/
+ 
+        ull p, q;
+        ext_gcd(m1/g, m2/g, &p, &q);
+ 
+        ll mod = m1 / g * m2; /** LCM of m1 and m2 //for smallest solution*/
+ 
+        ll x = (a1*(m2/g)*q + a2*(m1/g)*p) % mod;
+        
+        a1 = x;
+        if (a1 < 0) a1 += mod;
+        m1 = mod;
+    }
+    return {a1, m1};
+}
+
+
+
 //Lucas Theorem
 // can find NCR(n,r,p) where 1<=R<=N<=1e9 and p is a small prime number
 map<pair< pair<ll,ll>, ll>, ll>mp; // for memorization
@@ -71,6 +104,7 @@ ll NCR(ll n, ll r, ll p)
     if(!mp[{{n,r},p}])  mp[{{n,r},p}]=(NCR(n-1,r-1,p)+NCR(n-1,r,p))%p;
     return mp[{{n,r},p}];
 }
+
 int main()
 {
     ll tc,n,m,r,cs=0;
