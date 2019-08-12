@@ -27,7 +27,9 @@ ull ext_gcd(ull A, ull B, ull *X, ull *Y)
 /** Return {-1,-1} if invalid input.
     Otherwise, returns {x,L}, where x is the solution unique to mod L
 */
-pL CRT( vector<ll> A, vector<ll> M ) {
+// Works for coprime moduli only
+pL CRT( vector<ll> A, vector<ll> M )
+{
     if(A.size() != M.size()) return {-1,-1}; /** Invalid input*/
 
     int n = A.size();
@@ -36,7 +38,8 @@ pL CRT( vector<ll> A, vector<ll> M ) {
     ll m1 = M[0];
     /** Initially x = a_0 (mod m_0)*/
     /** Merge the solution with remaining equations */
-    for ( int i = 1; i < n; i++ ) {
+    for ( int i = 1; i < n; i++ ) 
+    {
         ll a2 = A[i];
         ll m2 = M[i];
 
