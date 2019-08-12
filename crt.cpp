@@ -61,9 +61,9 @@ pL CRT( vector<ll> A, vector<ll> M )
 }
 
 
-/** Works for non-coprime moduli.
+/** Works for both non-coprime and coprime moduli.
 for better understanding code see the comments of previous code */
-pL chinese_remainder_theorem( vector<int> A, vector<int> M ) {
+pL chinese_remainder_theorem( vector<ll> A, vector<ll> M ) {
     if(A.size() != M.size()) return {-1,-1}; /** Invalid input*/
  
     int n = A.size();
