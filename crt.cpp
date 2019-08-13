@@ -34,14 +34,14 @@ pL CRT( vector<ll> A, vector<ll> M )
 
     int n = A.size();
 
-    ll a1 = A[0];
-    ll m1 = M[0];
+    ull a1 = A[0];
+    ull m1 = M[0];
     /** Initially x = a_0 (mod m_0)*/
     /** Merge the solution with remaining equations */
     for ( int i = 1; i < n; i++ ) 
     {
-        ll a2 = A[i];
-        ll m2 = M[i];
+        ull a2 = A[i];
+        ull m2 = M[i];
 
         /** Merge the two equations*/
         ull p, q;
@@ -50,7 +50,7 @@ pL CRT( vector<ll> A, vector<ll> M )
         /** We need to be careful about overflow. the value of p and q becomes large quickly
         and intermediate calculations no longer fit into long long variables. in such case we
         can use __int128 data type to avoid overflow issues*/
-        ll x = (a1*m2*q + a2*m1*p) % (m1*m2);
+        ull x = (a1*m2*q + a2*m1*p) % (m1*m2);
 
         /** Merged equation*/
         a1 = x;
@@ -63,34 +63,30 @@ pL CRT( vector<ll> A, vector<ll> M )
 
 /** Works for both non-coprime and coprime moduli.
 for better understanding code see the comments of previous code */
-pL chinese_remainder_theorem( vector<ll> A, vector<ll> M ) {
-    if(A.size() != M.size()) return {-1,-1}; /** Invalid input*/
- 
-    int n = A.size();
- 
-    ll a1 = A[0];
-    ll m1 = M[0];
-    for ( int i = 1; i < n; i++ ) {
-        ll a2 = A[i];
-        ll m2 = M[i];
- 
-        ll g = __gcd(m1, m2);
+pL CRT( vector<ll> A, vector<ll> M ) {
+    if(A.size() != M.size()) return {-1,-1};  /** Invalid input*/
+
+    ll n = A.size();
+
+    ull a1 = A[0];
+    ull m1 = M[0];
+    for ( ll i = 1; i < n; i++ ) {
+        ull a2 = A[i];
+        ull m2 = M[i];
+
+        ull g = __gcd(m1, m2);
         if ( a1 % g != a2 % g ) return {-1,-1}; /** No solution exists*/
- 
         ull p, q;
         ext_gcd(m1/g, m2/g, &p, &q);
- 
-        ll mod = m1 / g * m2; /** LCM of m1 and m2 //for smallest solution*/
- 
-        ll x = (a1*(m2/g)*q + a2*(m1/g)*p) % mod;
-        
+
+        ull mod = (m1 / g) * m2;   /** LCM of m1 and m2 //for smallest solution*/
+        ull x = (a1*(m2/g)*q + a2*(m1/g)*p) % mod;
         a1 = x;
         if (a1 < 0) a1 += mod;
         m1 = mod;
     }
     return {a1, m1};
 }
-
 
 
 //Lucas Theorem
