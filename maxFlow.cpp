@@ -91,9 +91,15 @@ struct DinicMaxflow
         return flow ;
     }
 
-    DinicMaxflow( int _n, int _s, int _t )
+    void init( int _n, int _s, int _t )
     {
         n = _n; s = _s; t = _t;
+        for(int i=0; i<e.size(); i++) e[i].flow=0;
+    }
+    void RESET()
+    {
+        e.clear();
+        for(int i=0; i<=n; i++) g[i].clear();
     }
 };
 
@@ -106,7 +112,8 @@ int main()
     {
         int n,m;
         cin>>n;
-        DinicMaxflow DMF=DinicMaxflow(2*n+2,0,2*n+1);
+        DMF.RESET();
+        DMF.init(2*n+2,0,2*n+1);
         for(int i=1; i<=n; i++)
         {
             int cap;
