@@ -101,7 +101,7 @@ struct DinicMaxflow
         e.clear();
         for(int i=0; i<=n; i++) g[i].clear();
     }
-};
+} DMF;
 
 int main()
 {
