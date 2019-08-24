@@ -12,6 +12,8 @@ Aho_Corasick Algorithm
 **********************************************************/
 
 // problem: Substring Frequency (II) LightOJ - 1427
+// http://codeforces.com/contest/963/problem/D
+
 #include<bits/stdc++.h>
 using namespace std;
 #define MX 250005
@@ -30,12 +32,15 @@ struct node
 
 node T[MX];
 int suffix[MX],indx,len,path[MX];
-int val[MX],ed[505];
-
+int val[MX],ed[MX];
+//int E[MX], esf[MX]; 
+//vector<int>v[MX];   // list of index where an macth is ocurr for the i'th string
 struct Aho_Corasick
 {
     void init()
     {
+        //mem(esf,0); // contain immediate previous suffix which is an endpoint of a given string
+        //mem(E,0);   // check if the vertex is a endpoint or not
         len=indx=0;
         mem(T,0);
         mem(suffix,0);
@@ -56,6 +61,7 @@ struct Aho_Corasick
             now=T[now].nxt[id];
         }
         ed[p]=now;
+        //E[now]=p;
     }
     void reverse_link()
     {
@@ -82,6 +88,8 @@ struct Aho_Corasick
                 suffix[v]=T[suffix[u]].nxt[i];
                 q.push(v);
                 path[len++]=v;
+                //if(E[suffix[v]]) esf[v]=suffix[v];
+                //else             esf[v]=esf[suffix[v]];
             }
         }
     }
@@ -93,6 +101,12 @@ struct Aho_Corasick
             int id=s[i]-'a';
             now=T[now].nxt[id];
             val[now]++;
+            //int nd=now;
+            //while(nd>0)
+            //{
+            //    if(E[nd]) v[E[nd]].push_back(i+1);
+            //    nd=esf[nd];
+            //}
         }
         for(int i=len-1; i>=0; i--)
         {
