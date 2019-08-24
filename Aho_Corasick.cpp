@@ -1,3 +1,16 @@
+/**********************************************************
+Aho_Corasick Algorithm
+
+~Applications:
+
+*Find the occurrence of all string from a given set in a text
+*Find all strings from a given set in a text
+*Finding the lexicographical smallest string of a given length that doesn't match any given strings
+*Finding the shortest string containing all given strings
+*Finding the lexicographical smallest string of length L containing k strings
+
+**********************************************************/
+
 // problem: Substring Frequency (II) LightOJ - 1427
 #include<bits/stdc++.h>
 using namespace std;
