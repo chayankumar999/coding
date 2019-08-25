@@ -3,74 +3,54 @@ using namespace std;
 #define ll long long
 #define mem(a) memset(a,0,sizeof(a))
 #define mx 1000000005
-ll tree[500005],lazy[500005];
-void update(ll pos, ll lw, ll hg, ll x, ll y, ll v)
+ll T[500005],lazy[500005];
+void propagate(int p, int l, int h)
 {
-    if(lazy[pos]!=0)
+    T[p]+=(h-l+1)*lazy[p];
+    if(l!=h)
     {
-        tree[pos]+=(hg-lw+1)*lazy[pos];
-        if(lw!=hg)
-        {
-            lazy[2*pos+1]+=lazy[pos];
-            lazy[2*pos+2]+=lazy[pos];
-        }
-        lazy[pos]=0;
+        lazy[2*p]+=lazy[p];
+        lazy[2*p+1]+=lazy[p];
     }
-    if(x>hg || y<lw)
+    lazy[p]=0;
+}
+void up(int p, int l, int h, int x, int y, ll vl)
+{
+    if(lazy[p]!=0) propagate(p, l, h);
+    if(x>h || y<l) return;
+    if(l>=x && h<=y)
     {
+        T[p]+=(h-l+1)*vl;
+        if(l!=h)
+        {
+            lazy[2*p+1]+=vl;
+            lazy[2*p+2]+=vl;
+        }
         return;
     }
-    if(lw>=x && hg<=y)
-    {
-        tree[pos]+=(hg-lw+1)*v;
-        if(lw!=hg)
-        {
-            lazy[2*pos+1]+=v;
-            lazy[2*pos+2]+=v;
-        }
-        return;
-    }
-    ll md=(lw+hg)/2;
-    update(2*pos+1, lw, md, x, y, v);
-    update(2*pos+2, md+1, hg, x, y, v);
-    tree[pos]=tree[2*pos+1]+tree[2*pos+2];
+    int m=(l+h)/2;
+    up(2*p, l, m, x, y, vl);
+    up(2*p+1, m+1, h, x, y, vl);
+    T[p]=T[2*p]+T[2*p+1];
 }
-ll query(ll pos, ll lw, ll hg, ll x, ll y)
+long long Q(int p, int l, int h, int x, int y)
 {
-    if(x>hg || y<lw)
-    {
-        return 0;
-    }
-    if(lazy[pos]!=0)
-    {
-        tree[pos]+=(hg-lw+1)*lazy[pos];
-        if(lw!=hg)
-        {
-            lazy[2*pos+1]+=lazy[pos];
-            lazy[2*pos+2]+=lazy[pos];
-        }
-        lazy[pos]=0;
-    }
-    if(lw>=x && hg<=y)
-    {
-        return tree[pos];
-    }
-    ll md=(lw+hg)/2;
-    ll p=query(2*pos+1, lw, md, x, y);
-    ll q=query(2*pos+2, md+1, hg, x, y);
-    return p+q;
+    if(x>h || y<l)   return 0;
+    if(lazy[p]!=0)   propagate(p, l, h);
+    if(l>=x && h<=y) return T[p];
+    int m=(l+h)/2;
+    return Q(2*p, l, m, x, y)+Q(2*p+1, m+1, h, x, y);
 }
-//void build(ll pos, ll lw, ll hg)
+//void B(int p, int l, int h)
 //{
-//    if(lw==hg)
+//    if(l==h)
 //    {
-//        tree[pos]=a[lw];
-//        return;
+//        T[p]=a[l]; return;
 //    }
-//    ll md=(lw+hg)/2;
-//    build(pos,lw,md);
-//    build(pos,md+1,hg);
-//    tree[pos]=tree[2*pos+1]+tree[2*pos+2];
+//    int m=(l+h)/2;
+//    B(p,l,m);
+//    B(p,m+1,h);
+//    T[p]=T[2*p]+T[2*p+1];
 //}
 int main()
 {
