@@ -3,6 +3,8 @@ using namespace std;
 typedef long long ll;
 const int MX=100000;
 const ll mod=1e9+7;
+const ll mod1=999999937;
+const ll mod2=998244353;
 
 ll pw[MX],h[MX],rh[MX];
 int main()
