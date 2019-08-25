@@ -68,12 +68,12 @@ int main()
             if(p==0)
             {
                 cin>>x>>y>>v;
-                update(0,0,n-1,--x,--y,v);
+                up(1,1,n,x,y,v);
             }
             else if(p==1)
             {
                 cin>>x>>y;
-                cout<<query(0,0,n-1,--x,--y)<<endl;
+                cout<<Q(1,1,n,x,y)<<endl;
             }
         }
         mem(lazy);
