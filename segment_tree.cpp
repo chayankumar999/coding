@@ -3,37 +3,27 @@ using namespace std;
 #define ll long long
 #define mxx 123456789994;
 ll n;
-ll a[100001],seg[2000001];
-void memset()
+
+int T[MX];
+void up(int p, int l, int h, int x, int vl)
 {
-    int i;
-    for(i=0; i<4*n; i++)
+    if(l==h)
     {
-        seg[i]=mxx;
-        // cout<<seg[i]<<endl;
+        T[p]=vl; return;
     }
+    int m=(l+h)/2;
+    if(x<=m) up(2*p, l, m, x, vl);
+    else     up(2*p+1, m+1, h, x, vl);
+    T[p]=max(T[2*p],T[2*p+1]);
 }
-ll mnm_in_range(ll x, ll y, ll low, ll high, ll pos)
+int Q(int cr, int p, int l, int h, int x, int y)
 {
-    if(low >= x &&high <= y)
-    {
-        return seg[pos];
-    }
-    if(y<low||x>high)
-    {
-        return mxx;
-    }
-    ll md=(low+high)/2;
-    return min(mnm_in_range(x,y,low,md,2*pos+1),mnm_in_range(x,y,md+1,high,2*pos+2));
+    if(l>y || h<x)   return -INT_MAX;
+    if(l>=x && h<=y) return T[p];
+    int m=(l+h)/2;
+    return max(Q(2*p, l, m, x, y),Q(2*p+1, m+1, h, x, y));
 }
-//void print()
-//{
-//    for(ll i=0;i<2*n;i++)
-//    {
-//        cout<<seg[i]<<" ";
-//    }
-//    cout<<endl;
-//}
+
 void construct_tree(ll low, ll high, ll pos)
 {
     if(low==high)
