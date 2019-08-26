@@ -1,10 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
-#define mxx 123456789994;
-ll n;
+#define MX 1000000
 
-int T[MX];
+int T[4*MX], a[MX];
+
 void up(int p, int l, int h, int x, int vl)
 {
     if(l==h)
@@ -16,7 +15,8 @@ void up(int p, int l, int h, int x, int vl)
     else     up(2*p+1, m+1, h, x, vl);
     T[p]=max(T[2*p],T[2*p+1]);
 }
-int Q(int cr, int p, int l, int h, int x, int y)
+
+int Q(int p, int l, int h, int x, int y)
 {
     if(l>y || h<x)   return -INT_MAX;
     if(l>=x && h<=y) return T[p];
@@ -24,40 +24,27 @@ int Q(int cr, int p, int l, int h, int x, int y)
     return max(Q(2*p, l, m, x, y),Q(2*p+1, m+1, h, x, y));
 }
 
-void construct_tree(ll low, ll high, ll pos)
+void B(int l, int h, int p)
 {
-    if(low==high)
+    if(l==h)
     {
-        seg[pos]=a[low];
-        //cout<<pos<<" "<<low<<" "<<a[low]<<endl;
-        return;
+        T[p]=a[l]; return;
     }
-    ll md=(low+high)/2;
-    construct_tree(low,md,2*pos+1);
-    construct_tree(md+1,high,2*pos+2);
-    seg[pos]=min(seg[2*pos+1],seg[2*pos+2]);
+    int m=(l+h)/2;
+    B(2*p, l, m);
+    B(2*p+1, m+1, h);
+    T[p]=max(T[2*p], T[2*p+1]);
 }
 int main()
 {
-    ll m,i,j,x,y,low,high,pos,tc,t=1;
-    cin>>tc;
-    while(tc--)
-    {
-        scanf("%lld%lld",&n,&m);
-        memset();
-        for(i=0; i<n; i++)
-        {
-            scanf("%lld",&a[i]);
-        }
-        construct_tree(0,n-1,0);
-        //print();
-        printf("Case %lld:\n",t++);
-        while(m--)
-        {
-            scanf("%lld%lld",&x,&y);
-            ll r=mnm_in_range(x-1,y-1,0,n-1,0);
-            printf("%lld\n",r);
-        }
-    }
+    int n=10;
+
+    B(1, 1, n);
+
+    up(1, 1, n, x, vl);
+
+    int mx=Q(1, 1, n, 1, n);
+
+    cout<<mx<<endl;
     return 0;
 }
