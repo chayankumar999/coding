@@ -23,8 +23,8 @@ void up(int p, int l, int h, int x, int y, ll vl)
         T[p]+=(h-l+1)*vl;
         if(l!=h)
         {
+            lazy[2*p]+=vl;
             lazy[2*p+1]+=vl;
-            lazy[2*p+2]+=vl;
         }
         return;
     }
