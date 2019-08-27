@@ -27,14 +27,16 @@ int main()
             cin>>d[i];
             f[d[i]]++;
         }
-        for(int msk=0;msk<(1LL<<20);msk++) // dp calculation part
+        for(int msk=0;msk<(1LL<<20);msk++) // dp calculation part // use reverse loop for supermask
         {
             dp[msk][0]=f[msk];
-            if(msk&1)dp[msk][0]+=f[msk^1];
+            // if(!(msk&1)) // for supermask
+            if(msk&1) dp[msk][0]+=f[msk^1];
+            
             for(i=1;i<=20;i++)
             {
                 dp[msk][i]=dp[msk][i-1];
-                if(msk&(1LL<<i))
+                if(msk&(1LL<<i)) // if(!(msk&(1<<i))) // for supermask
                     dp[msk][i]+=dp[msk^(1LL<<i)][i-1];
             }
         }
