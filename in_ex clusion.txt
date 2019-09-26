@@ -19,7 +19,7 @@ ll in_ex(ll n)
             }
         }
         if(ans==1)continue;
-        ll no=m/ans;
+        ll no=n/ans;
         ll math=((ans+no*ans)*no)/2;
         // Sn=math={n/2*{2*a+(n-1)*d}}={(a+l)*n/2};
         //a=first term
