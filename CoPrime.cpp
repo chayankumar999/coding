@@ -40,7 +40,7 @@ int main()
 
 /*
 
- number of coprime of n using sieve and prime factorization (Faster than previous)
+ number of coprime of n using sieve and prime factorization
 
 */
 
