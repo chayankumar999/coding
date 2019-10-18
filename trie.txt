@@ -5,9 +5,28 @@ how many way the string st can be divided into some string that each string will
 */
 #include<bits/stdc++.h>
 using namespace std;
-#define MX 400000
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+typedef unsigned long long ull;
+typedef long long ll;
+typedef double db;
+
 #define mem(a,x) memset(a,x,sizeof(a))
-#define mod 20071027
+#define pb push_back
+#define ff first
+#define ss second
+#define mk make_pair
+#define pi pair<int,int>
+#define vi vector<int>
+#define pL pair<ll,ll>
+#define vL vector<ll>
+#define vp vector<pi>
+#define vpL vector<pL>
+
+const int MX=300000;
+const ll inf=1e9+2;
+const ll mod=20071027;
+
 vector<int>v[MX];
 struct Trie
 {
