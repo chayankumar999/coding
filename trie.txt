@@ -23,7 +23,7 @@ typedef double db;
 #define vp vector<pi>
 #define vpL vector<pL>
 
-const int MX=300000;
+const int MX=400000;
 const ll inf=1e9+2;
 const ll mod=20071027;
 
