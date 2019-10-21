@@ -5,28 +5,14 @@ using namespace std;
 
 #define ff first
 #define ss second
-#define pb push_back
-#define mk make_pair
 
-typedef long long ll;
-typedef double db;
-typedef queue<int> qq;
-typedef vector<int> vi;
-typedef pair<int, int> pii;
-typedef pair<int, pii> piii;
-typedef vector<pii> vii;
+typedef pair<int, int> pi;
 
-#define sc scanf
-#define pf1 printf
-#define sc1(x) scanf("%d", &x)
-#define sc2(x, y) scanf("%d %d", &x, &y)
-#define sc3(x, y, z) scanf("%d %d %d", &x, &y, &z)
-#define mem(a) memset(a,0,sizeof(a))
-#define mems(a) memset(a,-1,sizeof(a))
-#define inf 1e18
-#define MOD 23102009
-#define MX 1000006
-int T[MX],lft[MX],rgt[MX],sz[MX],prio[MX],av;
+#define inf 1e9
+#define MX 1000000+5
+
+int T[MX], lft[MX], rgt[MX], sz[MX], prio[MX], a[MX], av;
+
 int newNode(int x)//createNewNode
 {
     T[av]=x;
@@ -39,42 +25,42 @@ void update(int x)//size update of node x
 {
     if(x)sz[x]=sz[lft[x]]+sz[rgt[x]]+1;
 }
-pii splits(int x, int s)//splitBySize
+pi splits(int x, int s)//splitBySize
 {
-    if(!x) return {0,0};
-    if(!s) return {0,x};
-    else if(sz[x]<=s) return {x,0};
+    if(!x) return {0, 0};
+    if(!s) return {0, x};
+    else if(sz[x]<=s) return {x, 0};
     else if(sz[lft[x]]>=s)
     {
-        pii ret=splits(lft[x],s);
+        pi ret=splits(lft[x], s);
         lft[x]=ret.ss;
         update(x);
-        return {ret.ff,x};
+        return {ret.ff, x};
     }
     else
     {
-        pii ret=splits(rgt[x],s-sz[lft[x]]-1);
+        pi ret=splits(rgt[x], s-sz[lft[x]]-1);
         rgt[x]=ret.ff;
         update(x);
-        return {x,ret.ss};
+        return {x, ret.ss};
     }
 }
-pii splitv(int x, int v)//splitByValue
+pi splitv(int x, int v)//splitByValue
 {
-    if(!x)return {0,0};
+    if(!x) return {0, 0};
     if(T[x]<=v)
     {
-        pii ret=splitv(rgt[x],v);
+        pi ret=splitv(rgt[x], v);
         rgt[x]=ret.ff;
         update(x);
-        return {x,ret.ss};
+        return {x, ret.ss};
     }
     else
     {
-        pii ret=splitv(lft[x],v);
+        pi ret=splitv(lft[x], v);
         lft[x]=ret.ss;
         update(x);
-        return {ret.ff,x};
+        return {ret.ff, x};
     }
 }
 int join(int l, int r)//joinTwoBst
@@ -82,57 +68,62 @@ int join(int l, int r)//joinTwoBst
     if(!l||!r)return l?l:r;
     if(prio[l]>prio[r])
     {
-        rgt[l]=join(rgt[l],r);
+        rgt[l]=join(rgt[l], r);
         update(l);
         return l;
     }
     else
     {
-        lft[r]=join(l,lft[r]);
+        lft[r]=join(l, lft[r]);
         update(r);
         return r;
     }
 }
-int a[MX];
+
 int main()
 {
-    int tc,i,j,k,n,m,x,y,z;
+    int tc, n, m, x, y;
     cin>>tc;
     while(tc--)
     {
-        av=1;
-        cin>>n;
+        cin>>n; av=1;
         x=newNode(1);
-        for(i=2;i<=n;i++)
+        for(int i=2; i<=n; i++)
         {
             y=newNode(i);
-            x=join(x,y);
+            x=join(x, y);
         }
-        for(i=1;i<=n;i++)
+        for(int i=1; i<=n; i++)
         {
             cin>>a[i];
         }
-        for(i=n;i>=1;i--)
+        for(int i=n; i>=1; i--)
         {
             y=i-a[i];
-            pii ret=splits(x,y);
-            pii ret1=splits(ret.ff,y-1);
-            x=join(ret1.ff,ret.ss);
+            pi ret=splits(x, y);
+            pi ret1=splits(ret.ff, y-1);
+            x=join(ret1.ff, ret.ss);
             a[i]=T[ret1.ss];
         }
-        for(i=1;i<=n;i++)
+        for(int i=1; i<=n; i++)
         {
-            cout<<a[i]<<" ";
+            cout<<a[i];
+            if(i<n) cout<<' ';
+            else    cout<<endl;
         }
-        cout<<endl;
     }
     return 0;
 }
 
 
+---------------------------------------------
+// reverse range between a to b with lazy  //
+---------------------------------------------
 
-// reverse range between a to b
-//problem: UVA - 11922
+
+
+
+//problem: UVA - 11922 - Permutation Transformer
 
 
 #include <bits/stdc++.h>
@@ -142,28 +133,15 @@ using namespace std;
 
 #define ff first
 #define ss second
-#define pb push_back
-#define mk make_pair
 
-typedef long long ll;
-typedef double db;
-typedef queue<int> qq;
-typedef vector<int> vi;
-typedef pair<int, int> pii;
-typedef pair<int, pii> piii;
-typedef vector<pii> vii;
+typedef pair<int, int> pi;
 
-#define sc scanf
-#define pf1 printf
-#define sc1(x) scanf("%d", &x)
-#define sc2(x, y) scanf("%d %d", &x, &y)
-#define sc3(x, y, z) scanf("%d %d %d", &x, &y, &z)
-#define mem(a) memset(a,0,sizeof(a))
-#define mems(a) memset(a,-1,sizeof(a))
-#define inf 1e18
-#define MOD 23102009
-#define MX 1000006
+#define inf 1e9
+#define MX 1000000+5
+
+
 int T[MX],lft[MX],rgt[MX],sz[MX],prio[MX],lazy[MX],av;
+
 int newNode(int x)//createNewNode
 {
     T[av]=x;
@@ -185,7 +163,7 @@ void update(int x)//size update of node x
     if(x) sz[x]=sz[lft[x]]+sz[rgt[x]]+1;
 }
 
-pii splits(int x, int s)//splitBySize
+pi splits(int x, int s)//splitBySize
 {
     if(lazy[x]) propagate(x);
     if(!x) return {0,0};
@@ -193,14 +171,14 @@ pii splits(int x, int s)//splitBySize
     else if(sz[x]<=s) return {x,0};
     else if(sz[lft[x]]>=s)
     {
-        pii ret=splits(lft[x],s);
+        pi ret=splits(lft[x],s);
         lft[x]=ret.ss;
         update(x);
         return {ret.ff,x};
     }
     else
     {
-        pii ret=splits(rgt[x],s-sz[lft[x]]-1);
+        pi ret=splits(rgt[x],s-sz[lft[x]]-1);
         rgt[x]=ret.ff;
         update(x);
         return {x,ret.ss};
@@ -244,15 +222,15 @@ int main()
         {
             int a, b;
             cin>>a>>b;
-            pii ret=splits(x,b);
-            pii ret1=splits(ret.ff,a-1);
+            pi ret=splits(x,b);
+            pi ret1=splits(ret.ff,a-1);
             lazy[ret1.ss]^=1;
             x=join(ret1.ff,ret.ss);
             x=join(x, ret1.ss);
         }
         for(i=n;i>=1;i--)
         {
-            pii ret=splits(x, i-1);
+            pi ret=splits(x, i-1);
             x=ret.ff;
             ans[i]=T[ret.ss];
         }
@@ -264,3 +242,170 @@ int main()
     return 0;
 }
 
+
+
+
+// problem: UVA - 1402 Robotic Sort
+
+#include <bits/stdc++.h>
+using namespace std;
+
+#define FasterIO ios_base :: sync_with_stdio(0); cin.tie(0); cout.tie(0)
+
+#define ff first
+#define ss second
+
+typedef pair<int, int> pi;
+typedef pair<int, pi > pii;
+typedef pair<int, pii>p4;
+
+#define inf 1e9
+#define MX 1000000+5
+
+int lft[MX], rgt[MX], sz[MX], prio[MX], lazy[MX], av, n;
+
+pi T[MX],T1[MX];
+
+int newNode(int x, int c)//createNewNode
+{
+    T[av]=T1[av]={x, c};
+    lft[av]=rgt[av]=0;
+    sz[av]=1;
+    prio[av]=rand();
+    return av++;
+}
+void propagate(int x) // for reverse a range
+{
+    swap(lft[x], rgt[x]);
+    lazy[lft[x]]^=lazy[x];
+    lazy[rgt[x]]^=lazy[x];
+    lazy[x]=0;
+}
+
+void update(int x)//size update of node x
+{
+    if(x) sz[x]=sz[lft[x]]+sz[rgt[x]]+1;
+}
+
+pi splits(int x, int s)//splitBySize
+{
+    if(lazy[x]) propagate(x);
+    if(!x) return {0,0};
+    if(!s) return {0,x};
+    else if(sz[x]<=s) return {x,0};
+    else if(sz[lft[x]]>=s)
+    {
+        pi ret=splits(lft[x],s);
+        lft[x]=ret.ss;
+        T1[x]=min(T1[lft[x]], T[x]);
+        T1[x]=min(T1[rgt[x]], T1[x]);
+        update(x);
+        return {ret.ff,x};
+    }
+    else
+    {
+        pi ret=splits(rgt[x],s-sz[lft[x]]-1);
+        rgt[x]=ret.ff;
+        T1[x]=min(T1[lft[x]], T[x]);
+        T1[x]=min(T1[rgt[x]], T1[x]);
+        update(x);
+        return {x,ret.ss};
+    }
+}
+
+p4 Q(int x, int s) // find the minimum value between 1 to md
+{
+    if(lazy[x]) propagate(x);
+    if(!x) return {0,{0, {inf, n}}};
+    if(!s) return {0,{x, {inf, n}}};
+    if(sz[x]<=s) return {x,{0, T1[x]}};
+    else if(sz[lft[x]]>=s)
+    {
+        p4 ret=Q(lft[x],s);
+        lft[x]=ret.ss.ff;
+        T1[x]=min(T1[lft[x]], T[x]);
+        T1[x]=min(T1[rgt[x]], T1[x]);
+        update(x);
+        return {ret.ff,{x, min(T1[ret.ff], ret.ss.ss)}};
+    }
+    else
+    {
+        p4 ret=Q(rgt[x],s-sz[lft[x]]-1);
+        rgt[x]=ret.ff;
+        T1[x]=min(T1[lft[x]], T[x]);
+        T1[x]=min(T1[rgt[x]], T1[x]);
+        update(x);
+        return {x,{ret.ss.ff, min(T1[x], ret.ss.ss)}};
+    }
+}
+int join(int l, int r)//joinTwoBst
+{
+    if(lazy[l]) propagate(l);
+    if(lazy[r]) propagate(r);
+    if(!l||!r)return l?l:r;
+    if(prio[l]>prio[r])
+    {
+        rgt[l]=join(rgt[l],r);
+        T1[l]=min(T1[l], T1[r]);
+        update(l);
+        return l;
+    }
+    else
+    {
+        lft[r]=join(l,lft[r]);
+        T1[r]=min(T1[l], T1[r]);
+        update(r);
+        return r;
+    }
+}
+
+int main()
+{
+    int x, y;
+    while(cin>>n && n)
+    {
+        vector<pi>v(n); av=1;
+
+        cin>>v[0].ff; v[0].ss=0;
+        x=newNode(v[0].ff, 0); T1[0]={inf, n};
+
+        for(int i=1; i<n; i++)
+        {
+            cin>>v[i].ff; v[i].ss=i;
+            y=newNode(v[i].ff, v[i].ss);
+            x=join(x,y);
+        }
+        sort(v.begin(), v.end());
+        for(int i=0; i<n; i++)
+        {
+            int lo=1, hi=n-i+1, rs=-1;
+            while(lo<=hi)
+            {
+                int md=(lo+hi)/2;
+                p4 ret=Q(x, md);
+                x=join(ret.ff, ret.ss.ff);
+                if(ret.ss.ss<=v[i])
+                {
+                    rs=md; hi=md-1;
+                }
+                else lo=md+1;
+            }
+            if(rs==1)
+            {
+                x=splits(x,rs).ss;
+                cout<<rs+i;
+                if(i<n-1) cout<<' ';
+                else    cout<<endl;
+                continue;
+            }
+            pi ret=splits(x,rs);
+            pi ret1=splits(ret.ff,rs-1);
+            lazy[ret1.ff]^=1;
+            x=join(ret1.ff,ret.ss);
+            cout<<rs+i;
+            if(i<n-1) cout<<' ';
+            else    cout<<endl;
+        }
+    }
+    return 0;
+}
