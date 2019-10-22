@@ -1,0 +1,98 @@
+/*
+********************Primes*********************
+1000000007, 998244353,  777767777, 492366587, 1645333507, 909090909090909091, 108086391056891903
+
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+typedef unsigned long long ull;
+typedef long long ll;
+
+const int MX=1000000+5;
+
+struct HASH
+{
+    ull base=31, pw[MX], H[MX], RH[MX];
+    int n;
+    void generate_hash(string s)
+    {
+        pw[0]=1; n=s.size();
+
+        // generate power of base value
+        for(int i=1; i<=n; i++) pw[i]=(pw[i-1]*base);
+
+        // generate front hash
+        for(int i=0; i<n; i++)  H[i+1]  = ( i ? ( H[i] * base ) : 0 ) + s[i];
+
+        //generate reverse hash
+        for(int i=0; i<n; i++)  RH[i+1] = ( i ? (RH[i] * base ) : 0 ) + s[n-i-1];
+    }
+
+    ull getHV(int i, int sz) // return front hash between a range
+    {
+        return H[i+sz] - H[i] * pw[sz];
+    }
+    ull getRHV(int i, int sz) // return reverse hash between a range
+    {
+        return RH[i+sz] - RH[i] * pw[sz];
+    }
+    ull deleteChar(int i) // return hash value after deleting ith char
+    {
+        ull h = getHV(i+1, n-i-1);
+        if(i) h = getHV(0, i) * pw[n-i-1] + h;
+        return h;
+    }
+
+}HS;
+
+struct HASH2
+{
+    ll base=31, mod=1e9+7, pw[MX], H[MX], RH[MX], n, m;
+
+    void generate_hash(string s)
+    {
+        pw[0]=1; n=s.size();
+
+        for(int i=1; i<=n; i++) pw[i] = (pw[i-1] * base ) % mod;
+
+        for(int i=0; i<n; i++)  H[i+1]  = ( ( i ? ( H[i] * base ) : 0 ) + s[i]) % mod;
+
+        for(int i=0; i<n; i++)  RH[i+1] = ( ( i ? (RH[i] * base ) : 0 ) + s[n-i-1]) % mod;
+    }
+
+    ll getHV(int i, int sz)
+    {
+        return (H[i+sz] - (H[i] * pw[sz]) % mod + mod) % mod;
+    }
+    ll getRHV(int i, int sz)
+    {
+        return (RH[i+sz] - (RH[i] * pw[sz]) % mod + mod) % mod;
+    }
+    ll deleteChar(int i)
+    {
+        ll h = getHV(i+1, n-i-1);
+        if(i) h = ((getHV(0, i) * pw[n-i-1]) % mod + h)%mod;
+        return h;
+    }
+
+}HS2;
+
+int main()
+{
+    FasterIO;
+
+    int n; string s;
+
+    cin>>s; n=s.size();
+
+    HS2.generate_hash(s);
+
+    ll HH=HS2.getRHV(0, n);
+
+    ll H=HS2.deleteChar(0 /*i*/);
+
+    return 0;
+}
