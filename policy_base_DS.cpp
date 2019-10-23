@@ -9,6 +9,8 @@ using namespace __gnu_pbds;
 
 //less_equal used for multiset where st.order_of_key(x) gives the lower_bound of x
 
+// it will not work for erase element. so for erase element better to use ordered set as pair
+
 */
 
 #define FasterIO ios_base :: sync_with_stdio(0); cin.tie(0); cout.tie(0)
