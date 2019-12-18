@@ -1,0 +1,96 @@
+/*************************************************************************************
+    Fenwick tree for sum on the rectangle and update of an element.
+    O(logN ^ 2) on query.
+    Problem: LightOj 1266
+**************************************************************************************/
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+typedef unsigned long long ull;
+typedef long long ll;
+typedef double db;
+
+#define mem(a,x) memset(a,x,sizeof(a))
+#define pb push_back
+#define ff first
+#define ss second
+#define mk make_pair
+#define pi pair<int,int>
+#define vi vector<int>
+#define pL pair<ll,ll>
+#define vL vector<ll>
+#define vp vector<pi>
+#define vpL vector<pL>
+
+const int MX=100000+5;
+const int inf=5e8;
+const ll mod=1e9+7;
+
+const int MAXN = 1050;
+
+int n, m, q;
+int f[MAXN][MAXN], mp[MAXN][MAXN];
+
+void update(int x, int y, int delta)
+{
+    for (int i = x; i <= n; i = i | (i + 1))
+        for (int j = y; j <= m; j = j | (j + 1))
+            f[i][j] += delta;
+}
+
+int getSum(int x, int y)
+{
+    int res = 0;
+    for (int i = x; i > 0; i = (i & (i + 1)) - 1)
+        for (int j = y; j > 0; j = (j & (j + 1)) - 1)
+            res += f[i][j];
+    return res;
+}
+
+int getSum(int xFrom, int xTo, int yFrom, int yTo)
+{
+    return getSum(xTo, yTo) - getSum(xTo, yFrom - 1) - getSum(xFrom - 1, yTo) + getSum(xFrom - 1, yFrom - 1);
+}
+
+int main()
+{
+    int tc, cs=1;
+    scanf("%d", &tc);
+    while(tc--)
+    {
+        mem(mp, 0); mem(f, 0);
+
+        scanf("%d", &q);
+
+        printf("Case %d:\n", cs++);
+
+        m = n = 1001;
+
+        for (int i = 1; i <= q; i++)
+        {
+            int op;
+            scanf("%d", &op);
+            if (op == 0)
+            {
+                int x, y;
+                scanf("%d %d\n", &x, &y);
+                x++, y++;
+                if(!mp[x][y]) update(x, y, 1), mp[x][y]++;
+            }
+            else
+            {
+                int xFrom, xTo, yFrom, yTo;
+                scanf("%d %d %d %d", &xFrom, &yFrom, &xTo, &yTo);
+                xFrom++, yFrom++, xTo++, yTo++;
+//            if (xFrom > xTo)
+//                swap(xFrom, xTo);
+//            if (yFrom > yTo)
+//                swap(yFrom, yTo);
+                printf("%d\n", getSum(xFrom, xTo, yFrom, yTo));
+            }
+        }
+    }
+    return 0;
+}
