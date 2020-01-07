@@ -61,3 +61,64 @@ int main()
     }
     return 0;
 }
+
+
+
+
+
+
+/*
+
+***************Linear Diophantine Equation*****************
+
+ Given the value of integers A,B and C find a pair of integers (x,y)
+ such that it satisfies the equation Ax+By=C.
+ 
+*/
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+typedef long long ll;
+typedef pair<int, int>pi;
+
+int X, Y;
+
+int ext_gcd(int A, int B);
+
+bool linearDiophantine ( int A, int B, int C)
+{
+    int g = __gcd ( A, B );
+    if ( C % g != 0 ) return false; //No Solution
+
+    int a = A / g, b = B / g, c = C / g;
+    ext_gcd( a, b );   //Solve ax + by = 1
+
+    if ( g < 0 )            //Make Sure gcd(a,b) = 1
+    {
+        a *= -1; b *= -1; c *= -1;
+    }
+
+    X *= c; Y *= c;       //ax + by = c
+    return true;         //Solution Exists
+}
+
+pi getXY(int k, int A, int B) // return more valid solution
+{
+    return {X+k*B/__gcd(A,B),Y-k*A/__gcd(A,B)};
+}
+
+int main ()
+{
+    int A = 2, B = 3, C = 5;
+
+    bool res = linearDiophantine ( A, B, C);
+
+    if ( res == false )  cout<<"No Solution"<<endl;
+    else
+    {
+        cout<<"One Possible Solution "<<X<<' '<<Y<<endl;
+    }
+    return 0;
+}
