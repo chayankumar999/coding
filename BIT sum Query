@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+typedef long long ll;
+const int MX=200005;
+
+ll T[MX+5];
+
+void up(int i, int vl) // update value between i to MX
+{
+    while(i<=MX)
+    {
+        T[i]+=vl; i+=(i&(-i));
+    }
+}
+
+ll Q(int i) // return sum between 1 to i
+{
+    ll sm=0;
+    while(i>0)
+    {
+        sm+=T[i]; i-=(i&(-i));
+    }
+    return sm;
+}
+
+int main()
+{
+    FasterIO;
+
+    up(1, 6);
+    cout<<Q(10)<<endl;
+    return 0;
+}
+
