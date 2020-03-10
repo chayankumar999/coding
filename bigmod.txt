@@ -9,6 +9,7 @@ ll bigmod(ll b, ll p)
     return ans;
 }
 
+
 ll bigmod(int b, int p)
 {
     if(!p)  return 1;
