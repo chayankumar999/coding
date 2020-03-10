@@ -3,38 +3,48 @@ using namespace std;
 typedef long long ll;
 const ll mod=1000000007;
 const ll MX=1000005;
-ll bigmod(ll a, ll b)
+
+ll bigmod(ll b, ll p)
 {
-    if(!b)return 1;
-    else if(b&1) return (a*bigmod(a,b-1))%mod;
-    else{ll r=bigmod(a,b/2);return (r*r)%mod;}
+    ll ans = 1;
+    for(; p; p>>=1)
+    {
+        if(p&1) ans = ans * b % mod;
+        b = b * b % mod;
+    }
+    return ans;
 }
-ll fct[MX];
-ll NCR(ll n, ll r)
+
+ll F[MX], IF[MX];
+
+ll nCr(ll n, ll r)
 {
-    ll res=bigmod(fct[n-r],mod-2);
-    res=(res*(bigmod(fct[r],mod-2)))%mod;
-    //nCr=n!/(r!*(n-r)!)
-    return ((fct[n]*res)%mod);
+    //if(r > n) return 0;
+    return IF[r] * IF[n-r] % mod * F[n] % mod;
 }
+
 void FCT()
 {
-    fct[0]=1;
-    for(int i=1;i<MX;i++)
-    {
-        fct[i]=(fct[i-1]*i)%mod;
-    }
+    F[0] = IF[0] = 1;
+    for(int i = 1; i < MX; i++) F[i] = F[i-1] * i % mod;
+    for(int i = 1; i < MX; i++) IF[i] = bigmod(F[i], mod-2);
 }
+
 int main()
 {
-    ll i,j,k,n,m,tc,x,y;
+    
     FCT();
+    
+    ll  n, r, tc;
+    
     cin>>tc;
+    
     while(tc--)
     {
-        cin>>n>>m;
-        cout<<NCR(n,m)<<endl;
+        cin>>n>>r;
+        cout<<nCr(n,r)<<endl;
     }
+    
     return 0;
 }
 
