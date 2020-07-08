@@ -1,0 +1,77 @@
+/*
+
+Problem     : Guardians of the Lunatics
+Problem Link: https://www.hackerrank.com/contests/ioi-2014-practice-contest-2/challenges/guardians-lunatics-ioi14
+
+*/
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+typedef unsigned long long ull;
+typedef long long ll;
+typedef pair<ll, ll> pL;
+
+const int MX=8005;
+const ll inf=1e18;
+
+ll dp[1000][MX], PCL[MX], C[MX];
+
+inline void call(int i, int jl, int jr, int kl, int kr)
+{
+    if(jl > jr) return;
+
+    int mj=(jl+jr)/2;
+
+    dp[i][mj]=inf;
+
+    int opt=-1;
+
+    for(int k=kl; k<=min(mj, kr); k++)
+    {
+        ll d=max(mj-k, 0);
+
+        ll cost=(PCL[mj]-PCL[k])*d;
+
+        if(dp[i-1][k] + cost < dp[i][mj])
+        {
+            dp[i][mj] = dp[i-1][k] + cost, opt=k;
+        }
+    }
+
+    call(i, jl, mj-1, kl, opt);
+    call(i, mj+1, jr, opt, kr);
+}
+
+
+int main()
+{
+    FasterIO;
+
+    int tc=1;
+
+//    cin>>tc;
+
+    while(tc--)
+    {
+
+        int L, G;
+
+        cin>>L>>G;
+
+        for(int i=1; i<=L; i++)  cin>>C[i];
+
+        for(ll i=1; i<=L; i++) PCL[i]=C[i]+PCL[i-1];
+
+        for(int j=1; j<=L; j++)
+
+        for(ll i=1; i<=L; i++) dp[1][i]=(PCL[i]*i);
+
+        for(int i=2; i<=G; i++) call(i, 1, L, 1, L);
+
+        cout<<dp[G][L]<<endl;
+    }
+    return 0;
+}
