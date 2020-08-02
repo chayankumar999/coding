@@ -1,0 +1,103 @@
+/*
+
+Topic  : Parallel Binary Search
+
+problem: Stamp Rally
+Link   : https://atcoder.jp/contests/agc002/tasks/agc002_d
+
+Descripion: given a connected graph of n vertices and m edges. edges are numbered from 1 to m.
+given q query. each contains x, y, z. for each query you have to tell if two brother started
+visited the graph by order of the given edge than what will be the minimum number of edge for
+which the number of unique visited vertices by both of them will be greater then equal to z.
+
+idea: do binary search for each query parrallelly. Also need Datastructure (Here, DSU) .
+
+Complexity: O(q * log(q) * X). where X is dependent on the problem and the data structures used in it
+*/
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+#define ff first
+#define ss second
+#define pi pair<int,int>
+
+const int MX=1000000;
+const int LG=20;
+
+int bos[MX], sz[MX], x[MX], y[MX], z[MX], L[MX], R[MX];
+
+
+vector<int>check[MX];
+vector<pi>edge;
+
+int Boss(int x)
+{
+    if(bos[x]==x) return x;
+    return bos[x]=Boss(bos[x]);
+}
+
+void connectEdge(int id)
+{
+    --id;
+    int a=edge[id].ff, b=edge[id].ss;
+    int p=Boss(a), q=Boss(b);
+    if(p!=q)
+    {
+        bos[q]=p, sz[p]+=sz[q];
+    }
+}
+
+int main()
+{
+    FasterIO;
+
+
+    int n, m, q;
+
+    cin>>n>>m;
+
+    for(int i=1; i<=m; i++)
+    {
+        int a, b; cin>>a>>b;
+        edge.push_back({a, b});
+    }
+
+    cin>>q;
+
+    for(int i=1; i<=q; i++) cin>>x[i]>>y[i]>>z[i];
+
+
+    for(int i=1; i<=q; i++) L[i]=1, R[i]=m;         // set lower and upperbound for each query
+
+    for(int i=1; i<=LG; i++)
+    {
+        for(int j=1; j<=n; j++) bos[j]=j, sz[j]=1;  // reset DSU
+        for(int j=1; j<=m; j++) check[j].clear();   // clear mid query
+
+        for(int j=1; j<=q; j++)                     // generated mid point for each query
+        {
+            if(L[j]!=R[j])
+            {
+                int mid=(L[j]+R[j])/2;
+                check[mid].push_back(j);            // insert query index for a specific mid point
+            }
+        }
+
+        for(int e=1; e<=m; e++)                     // build DSU by insert edges one by one
+        {
+            connectEdge(e);
+            for(auto k:check[e])                    // check validation and set lower/upperbound for each query which current midpoint is e
+            {
+                int a=Boss(x[k]), b=Boss(y[k]);
+                if(a==b && sz[a]>=z[k] || a!=b && sz[a]+sz[b]>=z[k])    R[k]=e;
+                else                                                    L[k]=e+1;
+            }
+        }
+    }
+
+    for(int i=1; i<=q; i++) cout<<R[i]<<'\n';
+
+    return 0;
+}
