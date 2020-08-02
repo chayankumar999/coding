@@ -81,14 +81,14 @@ int main()
             if(L[j]!=R[j])
             {
                 int mid=(L[j]+R[j])/2;
-                check[mid].push_back(j);            // insert query index for a specific mid point
+                check[mid].push_back(j);            // insert query index to its current mid point
             }
         }
 
         for(int e=1; e<=m; e++)                     // build DSU by insert edges one by one
         {
             connectEdge(e);
-            for(auto k:check[e])                    // check validation and set lower/upperbound for each query which current midpoint is e
+            for(auto k:check[e])                    // check validation and reset lower/upperbound for each query which current midpoint is e
             {
                 int a=Boss(x[k]), b=Boss(y[k]);
                 if(a==b && sz[a]>=z[k] || a!=b && sz[a]+sz[b]>=z[k])    R[k]=e;
