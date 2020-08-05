@@ -1,0 +1,173 @@
+/*
+
+MOS ALGO: path query
+problem : COT2 - Count on a tree II
+link    : https://www.spoj.com/problems/COT2/en/
+
+description: give a tree of n vertex. each vertex has assigned a value. you have to answer q queries.
+each query consist u and v. you have to tell how many unique value occures between path u to v.
+
+*/
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define FasterIO ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+
+#define mem(a,x) memset(a,x,sizeof(a))
+
+const int MX=200000;
+const int LG=20;
+
+int ID[MX], VIS[MX], S[MX], E[MX], A[MX], ans[MX], VAL[MX], N, cn, n, q;
+int depth[MX+5], sp[MX+5][LG+2];
+
+vector<int>g[MX];
+
+map<int, int>mp;
+
+void dfs(int x, int p)
+{
+    S[x]=++N; ID[N]=x;
+
+    sp[x][0]=p; depth[x]=depth[p]+1;
+
+    for(auto u:g[x])
+    {
+        if(u==p) continue;
+        dfs(u, x);
+    }
+    E[x]=++N; ID[N]=x;
+}
+
+
+void SPTBL(int n)
+{
+    for(int j=1; (1<<j)<=n; j++)
+    {
+        for(int i=1; i<=n; i++)
+        {
+            if(sp[i][j-1]==-1) continue;
+            sp[i][j]=sp[sp[i][j-1]][j-1];
+        }
+    }
+}
+
+int lca(int x, int y)
+{
+    if(depth[x]<depth[y]) swap(x,y);
+    int dist = depth[x] - depth[y] ;
+    for(int i=LG; i>=0; i--)
+    {
+        if((1<<i)<=dist)
+        {
+            x= sp[x][i];
+            dist-= (1<<i);
+        }
+    }
+    if(x==y) return x;
+    for(int i=LG; i>=0; i--)
+    {
+        if(sp[x][i]!=sp[y][i] && sp[x][i]!=-1)
+        {
+            x=sp[x][i];
+            y=sp[y][i];
+        }
+    }
+    return sp[x][0];
+}
+
+
+struct Query
+{
+    int x, y, id, block, P;
+};
+
+Query query[MX];
+
+bool comp(Query r, Query s)
+{
+    if(r.block<s.block)         return true;
+    else if(r.block==s.block)   return r.y<s.y;
+    return false;
+}
+
+void check(int x, int& res)
+{
+    // If (x) occurs twice, then don't consider it's value
+    if(VIS[x] && --VAL[A[x]] == 0)         res--;
+    else if(!VIS[x] && ++VAL[A[x]] == 1)   res++;
+    VIS[x]^=1;
+}
+
+void MOS()
+{
+    int L, R, id, p;
+    int curL=0, curR=0, res=0;
+
+    for(int i=1; i<=q; i++)
+    {
+        L=query[i].x, R=query[i].y, id=query[i].id, p=query[i].P;
+
+        while(curL<L)   check(ID[curL++], res);
+        while(curL>L)   check(ID[--curL], res);
+        while(curR<=R)  check(ID[curR++], res);
+        while(curR-1>R) check(ID[--curR], res);
+
+        ans[id]=res;
+
+        if(p && VAL[A[p]]==0) ans[id]++;
+    }
+}
+
+int main()
+{
+
+    FasterIO;
+
+    cin>>n>>q;
+    for(int i=1; i<=n; i++) cin>>A[i];
+
+    for(int i=1; i<=n; i++)
+    {
+        if(!mp[A[i]]) mp[A[i]]=++cn;
+        A[i]=mp[A[i]];
+    }
+
+    for(int i=1; i<n; i++)
+    {
+        int x, y; cin>>x>>y;
+        g[x].push_back(y), g[y].push_back(x);
+    }
+
+    mem(sp, -1);
+    dfs(1, 0);
+    SPTBL(n);
+
+    int sq=sqrt(E[1]);
+
+    for(int i=1; i<=q; i++)
+    {
+
+        cin>>query[i].x>>query[i].y;
+        if(S[query[i].x]>S[query[i].y]) swap(query[i].x, query[i].y);
+
+        query[i].id=i;
+
+        int _lca=lca(query[i].x, query[i].y);
+
+        if(_lca==query[i].x)    query[i].x=S[query[i].x], query[i].y=S[query[i].y];
+        else                    query[i].x=E[query[i].x], query[i].y=S[query[i].y], query[i].P=_lca;
+
+        query[i].block=query[i].x/sq;
+
+    }
+
+    sort(query+1, query+q+1, comp);
+
+    MOS();
+
+    for(int i=1; i<=q; i++) cout<<ans[i]<<'\n';
+
+    return 0;
+}
