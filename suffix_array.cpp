@@ -1,8 +1,11 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define MX 100005
 #define mem(a) memset(a,0,sizeof(a))
 #define sc(a) scanf("%d",&a)
+
+typedef const int MX=1000000;
+typedef const int LG=20;
+
 struct SUFFIX_ARRAY
 {
     int ra[MX],tra[MX],sa[MX],tsa[MX],r[MX];
@@ -70,7 +73,55 @@ struct SUFFIX_ARRAY
         for(int i=0;i<=len;i++)  cout << lcp[i] << "  ";
         cout << endl;
     }
+    
+    int sp[MX][20];
+    
+    void SPTBL(int n)
+    {
+        for(int j=1; (1<<j)<=n; j++)
+        {
+            for(int i=1; i+(1<<(j-1))<=n; i++)
+            {
+                sp[i][j]=min(sp[i][j-1], sp[i+(1<<(j-1))][j-1]);
+            }
+        }
+    }
+    
 } SA;
+
+int QL(int n, int p, int len)
+{
+    int lo=1, hi=p, rs=p;
+    while(lo<=hi)
+    {
+        int m=(lo+hi)/2; int LG=31-__builtin_clz(p-m);
+        int r=min(sp[m+1][LG],sp[p-(1<<LG)+1][LG]);
+        if(r>=len)
+        {
+            rs=m; hi=m-1;
+        }
+        else lo=m+1;
+    }
+    return rs;
+}
+
+int QR(int n, int p, int len)
+{
+    int lo=p+1, hi=n, rs=p;
+    while(lo<=hi)
+    {
+        int m=(lo+hi)/2; int LG=31-__builtin_clz(m-p);
+        int r=min(sp[p+1][LG],sp[m-(1<<LG)+1][LG]);
+        if(r>=len)
+        {
+            rs=m; lo=m+1;
+        }
+        else hi=m-1;
+    }
+    return rs;
+}
+
+
 struct _KMP
 {
     int lps[MX],a[MX],c;
