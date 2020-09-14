@@ -60,3 +60,67 @@ int Q(int n, int p)
 
 
 
+/*--------Lazy Propagation--------*/
+
+// Increment modifications, queries for maximum, minimum
+
+
+const int MX=200000;
+
+int a[MX], lazy[MX], T[MX];
+
+void propagate(int n, int p, int vl)
+{
+    T[p]+=vl;
+    if(p<n) lazy[p]+=vl;
+}
+
+void merge(int p)
+{
+    while(p>1) p>>=1, T[p]=max(T[p<<1], T[p<<1|1])+lazy[p];
+}
+
+void push(int n, int p)
+{
+    for(int i=20; i>0; i--) // ith parent
+    {
+        int par=p>>i;
+        if(lazy[par])
+        {
+            propagate(n, par<<1, lazy[par]);
+            propagate(n, par<<1|1, lazy[par]);
+            lazy[par]=0;
+        }
+    }
+}
+
+void up(int n, int l, int r, int vl)
+{
+    r++;
+    l+=n, r+=n;
+    int L=l, R=r;
+    for(;l<r; l>>=1, r>>=1)
+    {
+        if(l&1) propagate(n, l++, vl);
+        if(r&1) propagate(n, --r, vl);
+    }
+    merge(L), merge(R-1);
+}
+
+int Q(int n, int l, int r)
+{
+    r++;
+    l+=n, r+=n;
+    push(n, l), push(n, r-1);
+    int mx=-1e9;
+    for(; l<r; l>>=1, r>>=1)
+    {
+        if(l&1) mx=max(mx, T[l++]);
+        if(r&1) mx=max(mx, T[--r]);
+    }
+    return mx;
+}
+
+
+
+
