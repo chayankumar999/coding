@@ -1,87 +1,107 @@
+/*
+Problem: Ant Network (Light Oj)
+Problem Link: http://lightoj.com/volume_showproblem.php?problem=1308
+*/
+
 #include<bits/stdc++.h>
 using namespace std;
-#define ll long long
-#define db double
-#define pb push_back
-#define pi 2*acos(0.0)
-#define pf(a) printf("%lld\n",a)
-#define sc(a) scanf("%lld",&a)
-#define scn(a,b) scanf("%lld%lld",&a,&b)
-#define pf1(t,a) printf("Case %lld: %lld\n",t,a)
-#define mem(a) memset(a,0,sizeof (a))
-#define mems(a) memset(a,-1,sizeof(a))
-vector<ll>v[20005];
-ll ans[10005],vis;
-ll low[10005],dis[100005],n,m,c,p;
-void dfs(ll x,ll p)
+
+const int MX=100000;
+typedef unsigned long long ll;
+
+vector<int>g[MX];
+
+int AP[MX], ap, cn;
+
+int low[MX], dis[MX], vis[MX], Time;
+
+void dfs(int u, int p)
 {
-    ll sz=v[x].size();
-    low[x]=dis[x]=++c;
-    for(int i=0; i<sz; i++)
+    low[u]=dis[u]=++Time;
+
+    int child=0;
+
+    for(auto v:g[u])
     {
-        ll adx=v[x][i];
-        if(adx==p)
+        if(v==p) continue;
+
+        if(low[v]==0)
         {
-            continue;
-        }
-        if(adx==1)//for root check
-        {
-            vis++;
-        }
-        if(low[adx]==0)
-        {
-            dfs(adx,x);
-            if(dis[x]<=low[adx])
-            {
-                ans[x]=1;
-            }
-            low[x]=min(low[x],low[adx]);
+            child++;
+
+            dfs(v, u);
+
+            if(u!=0 && dis[u]<=low[v] || u==0 && child>1) AP[u]=ap=1;
+
+            low[u]=min(low[u], low[v]);
         }
         else
         {
-            low[x]=min(low[x],dis[adx]);
+            low[u]=min(low[u], dis[v]);
         }
     }
 }
+
+set<int>st;
+
+void dfs2(int u)
+{
+    if(vis[u]) return;
+
+    vis[u]=1; cn++;
+
+    for(auto v:g[u])
+    {
+        if(AP[v])
+        {
+            st.insert(v); continue;
+        }
+
+        dfs2(v);
+    }
+}
+
+void RESET(int n)
+{
+    Time=0, ap=0;
+    for(int i=0; i<n; i++) g[i].clear(), AP[i]=vis[i]=low[i]=dis[i]=0;
+}
+
 int main()
 {
-    ll i,j,k,l,x,y,tc,t=1;
-    scanf("%lld",&tc);
+    int tc, cs=1;
+
+    scanf("%d", &tc);
+
     while(tc--)
     {
-        scanf("%lld%lld",&n,&m);
-        for(i=0; i<m; i++)
+        int n, m; scanf("%d%d", &n, &m);
+
+        RESET(n);
+
+        for(int i=0; i<m; i++)
         {
-            scanf("%lld%lld",&x,&y);
-            if(x==y)
-                continue;
-            v[x].pb(y);
-            v[y].pb(x);
+            int x, y; scanf("%d%d", &x, &y);
+            g[x].push_back(y), g[y].push_back(x);
         }
-        c=0;
-        vis=1;
-        dfs(1,0);
-        c=0;
-        if(vis<v[1].size())//for root check
+
+        dfs(0, -1);
+
+        ll way=1; int ans=0;
+
+        if(ap==0) ans=2, way=(1LL*n*(n-1))/2;
+        else
         {
-            c++;
-        }
-        for(i=2; i<=n; i++)
-        {
-            if(ans[i]==1)
+            for(int i=0; i<n; i++)
             {
-                c++;
+                if(AP[i] || vis[i]) continue;
+
+                st.clear(); cn=0;
+                dfs2(i);
+                if(st.size()<=1) way*=cn, ans++;
             }
         }
-        printf("Case %lld: %lld\n",t++,c);
-        mem(low);
-        mem(dis);
-        mem(ans);
-        for(i=1; i<=n; i++)
-        {
-            v[i].clear();
-        }
+        printf("Case %d: %d %llu\n", cs++, ans, way);
     }
     return 0;
 }
-
