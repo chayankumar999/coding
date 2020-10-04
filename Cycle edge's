@@ -1,0 +1,27 @@
+bool flg;
+int dis[MX], run[MX], cycle;
+vector<pi>edge;
+
+void dfs(int x)
+{
+    dis[x]=run[x]=true;
+
+    for(auto u:G[x])
+    {
+        if(dis[u]&&run[u])
+        {
+            flg=1, cycle=u; edge.push_back({x, u}); return;
+        }
+
+        if(!dis[u]) dfs2(u);
+        
+        if(flg)
+        {
+            if(u==cycle) return;
+            edge.push_back({x, u});
+            return;
+        }
+    }
+
+    run[x]=false;
+}
