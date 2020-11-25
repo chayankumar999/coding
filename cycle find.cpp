@@ -85,3 +85,64 @@ int main()
 }
 
 
+
+// A set of vertex which make a cycle in an undirected graph
+
+#include<bits/stdc++.h>
+using namespace std;
+
+const int MX=200000+10;
+
+vector<int>g[MX], cycle;
+
+int A, B, f;
+int vis[MX], run[MX], P[MX];
+
+void dfs(int v, int p)
+{
+    if(f) return;
+    vis[v]=run[v]=1, P[v]=p;
+    for(auto u:g[v])
+    {
+        if(f) return;
+        if(u!=p && vis[u] && run[u])
+        {
+            A=u, B=v, f=1; return;
+        }
+        if(!vis[u]) dfs(u, v);
+    }
+    run[v]=0;
+}
+
+
+int main()
+{
+    int n; cin>>n;
+
+    A=B=f=0; cycle.clear();
+    for(int i=1; i<=n; i++)
+    {
+        int x, y; cin>>x>>y;
+        g[x].push_back(y), g[y].push_back(x);
+    }
+
+    dfs(1, 0);
+
+    for(int i=1; i<=n; i++) vis[i]=0;
+
+    int cn=0;
+    while(true)
+    {
+        if(A==B) break;
+        cycle.push_back(B);
+        vis[B]=1, B=P[B], cn++;
+    }
+    cycle.push_back(B), vis[B]=1, cn++;
+
+    cout<<"cycle length = "<<cn<<'\n';
+    for(auto u:cycle) cout<<u<<' ';
+    cout<<'\n';
+
+    return 0;
+}
+
