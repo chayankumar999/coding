@@ -17,7 +17,7 @@ struct Node
 {
     int len;
     int link;
-    int num;    // cnnt of differennt palindrome
+    int num;    // cnt of differennt palindrome
     int occur;  // cnt of same palindromes
     int nxt[26];
 };
