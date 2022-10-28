@@ -9,7 +9,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-#define mem(a,x) memset(a,x,sizeof(x))
+#define mem(a,x) memset(a,x,sizeof(a))
 
 const int MX=200000;
 
