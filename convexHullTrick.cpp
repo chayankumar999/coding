@@ -176,7 +176,7 @@ int main()
 
 
 ///Online update and online query
-///everything is fine as long as you want the minimum/maximum
+///everything is fine as long as you want the minimum
 
 ///https://www.codechef.com/problems/JUMP
 
@@ -269,8 +269,7 @@ struct cht
     }
     void add_line(long long a, long long b)
     {
-        //line temp = line(-a, -b); // for maximum
-        line temp = line(a, b); // for minimum
+        line temp = line(a, b);
         auto it = hull.lower_bound(temp);
         if(it != hull.end() && it -> a == a)
         {
@@ -311,8 +310,7 @@ struct cht
         query.type = 1;
         auto it = hull.lower_bound(query);
         it = prev(it);
-        //return -(it -> a * x + it -> b); // for maximum
-        return (it -> a * x + it -> b); // for minimum
+        return (it -> a * x + it -> b);
     }
 }T[4*MX];
 void up(int p, int l, int h, int id, pL pr)
