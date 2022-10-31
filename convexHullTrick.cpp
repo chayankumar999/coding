@@ -176,6 +176,190 @@ int main()
 
 
 ///Online update and online query
+///everything is fine as long as you want the minimum/maximum
+//https://codeforces.com/contest/91/problem/E
+
+
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+typedef pair<ll, ll> pL;
+const int MX = 100010;
+
+typedef pair<ll, ll>pL;
+typedef long double float128;
+const ll is_query = -(1LL<<62), inf = 1e18;
+struct line
+{
+    ll a, b, id;
+    double xleft;
+    bool type;
+    line(ll _a, ll _b, int _id) // can add more parameter if needed
+    {
+        a = _a;
+        b = _b;
+        id = _id;
+        type = 0;
+    }
+    bool operator < (const line &other) const
+    {
+        if(other.type)
+        {
+            return xleft < other.xleft;
+        }
+        return a > other.a;
+    }
+};
+double meet(line x, line y)
+{
+    return 1.0 * (y.b - x.b) / (x.a - y.a);
+}
+struct cht
+{
+    set < line > hull;
+    cht()
+    {
+        hull.clear();
+    }
+    typedef set < line > :: iterator ite;
+    bool hasleft(ite node)
+    {
+        return node != hull.begin();
+    }
+    bool hasright(ite node)
+    {
+        return node != prev(hull.end());
+    }
+    void updateborder(ite node)
+    {
+        if(hasright(node))
+        {
+            line temp = *next(node);
+            hull.erase(temp);
+            temp.xleft = meet(*node, temp);
+            hull.insert(temp);
+        }
+        if(hasleft(node))
+        {
+            line temp = *node;
+            temp.xleft = meet(*prev(node), temp);
+            hull.erase(node);
+            hull.insert(temp);
+        }
+        else
+        {
+            line temp = *node;
+            hull.erase(node);
+            temp.xleft = -inf; // -inf for both min and max
+            hull.insert(temp);
+        }
+    }
+    bool useless(line left, line middle, line right)
+    {
+        double x = meet(left, right);
+        double y = x * middle.a + middle.b;
+        double ly = left.a * x + left.b;
+        return y > ly;
+    }
+    bool useless(ite node)
+    {
+        if(hasleft(node) && hasright(node))
+        {
+            return useless(*prev(node), *node, *next(node));
+        }
+        return 0;
+    }
+    void add_line(ll a, ll b, int id)
+    {
+        line temp = line(a, b, id); // for maximum
+        //line temp = line(-a, -b, id); // for minimum
+        auto it = hull.lower_bound(temp);
+        if(it != hull.end() && it -> a == a)
+        {
+            if(it -> b > b)
+            {
+                hull.erase(it);
+            }
+            else
+            {
+                return;
+            }
+        }
+        hull.insert(temp);
+        it = hull.find(temp);
+        if(useless(it))
+        {
+            hull.erase(it);
+            return;
+        }
+        while(hasleft(it) && useless(prev(it)))
+        {
+            hull.erase(prev(it));
+        }
+        while(hasright(it) && useless(next(it)))
+        {
+            hull.erase(next(it));
+        }
+        updateborder(it);
+    }
+    pL getbest(ll x)
+    {
+        if(hull.empty())
+        {
+            return {-inf, -1}; // for maximum
+            //return {inf, 1};   // for minimum
+        }
+        line query(0, 0, -1);
+        query.xleft = x;
+        query.type = 1;
+        auto it = hull.lower_bound(query);
+        it = prev(it);
+        return {-(it -> a * x + it -> b), it->id};
+    }
+} T[4 * MX];
+void up(int p, int l, int h, int x, pL xx) {
+    T[p].add_line(-xx.first, -xx.second, x);
+    if(l == h) return;
+    int mid = (l + h) / 2;
+    if(x <= mid) up(2 * p, l, mid, x, xx);
+    else         up(2 * p + 1, mid + 1, h, x, xx);
+}
+pL Q(int p, int l, int h, int x, int y, ll val) {
+    if(l > y || h < x) return {0, 0};
+    int mid = (l + h) / 2;
+    if(l >= x && h <= y) return T[p].getbest(val);
+    else {
+        int mid = (l + h) / 2;
+        pL xL = Q(2 * p, l, mid, x, y, val);
+        pL xR = Q(2 * p + 1, mid + 1, h, x, y, val);
+        if(xR.first > xL.first) return xR;
+        else                    return xL;
+    }
+}
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int n, q;
+    cin>>n>>q;
+    for(int i = 1; i <= n; i++) {
+        int x, y; cin>>x>>y;
+        up(1, 1, n, i, {y, x});
+        //add_line(-m, -c); // for minimum
+        //add_line(m, c);   // for maximum
+    }
+    while(q--) {
+        int l, r, t;
+        cin>>l>>r>>t;
+        cout<<Q(1, 1, n, l, r, t).second<<'\n';
+    }
+    return 0;
+}
+
+
+
+
+///Online update and online query
 ///everything is fine as long as you want the minimum
 
 ///https://www.codechef.com/problems/JUMP
